@@ -12,8 +12,6 @@
 #include "TFile.h"
 #include "TSystem.h"
 #include "TTree.h"
-#include "TString.h"
-#include "TMath.h"
 
 //---------------------------------------------------------------------------
 
@@ -21,7 +19,7 @@ AnalysisManager::AnalysisManager()
 {
   ZeroArray();
 
-  fOutFileName = TString("output/out_default.root");
+  fOutFileName = string("output/out_default.root");
 
   fAnaMessenger = new AnalysisMessenger(this);
 }
@@ -126,7 +124,7 @@ void AnalysisManager::FillArray( int hitn )
     fRAW_ypost[hitn]  = (float)fSteppospost.getY();                             
     fRAW_zpost[hitn]  = (float)fSteppospost.getZ();                             
     fRAW_Edep[hitn]   = (float)fStepedep;
-    fRAW_Energy[hitn] = TMath::Sqrt( fRAW_mom[hitn]*fRAW_mom[hitn] 
+    fRAW_Energy[hitn] = sqrt( fRAW_mom[hitn]*fRAW_mom[hitn] 
 				     + fRAW_mass[hitn]*fRAW_mass[hitn] );
 
     fRAW_xpre[hitn]   = (fRAW_xpre[hitn] + fRAW_xpost[hitn])/2.;

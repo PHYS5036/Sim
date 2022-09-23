@@ -7,7 +7,6 @@
 
 #include "G4ThreeVector.hh"
 #include "G4ParticleDefinition.hh"
-#include "TString.h"
 
 class TTree;
 class TFile;
@@ -27,7 +26,7 @@ public:
   void FillArray( int );
   void FillTree();
 
-  void SetOutFileName  ( TString fname )           { fOutFileName  = fname; }
+  void SetOutFileName  ( string fname )           { fOutFileName  = fname; }
 
   void SetPrimaryEnergy   (G4double       ene  )       { fPEne  = ene;  }
   void SetPrimaryTime     (G4double       time )       { fPTime = time; }
@@ -45,7 +44,7 @@ public:
 private:
   
   AnalysisMessenger*    fAnaMessenger;
-  TString               fOutFileName;
+  string               fOutFileName;
   TFile*                fROOTfile;
   TTree*                fROOTtree;
   
