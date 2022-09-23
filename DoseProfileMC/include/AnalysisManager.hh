@@ -26,7 +26,7 @@ public:
   void FillArray( int );
   void FillTree();
 
-  void SetOutFileName  ( string fname )           { fOutFileName  = fname; }
+  void SetOutFileName  ( G4String fname )           { fOutFileName  = fname; }
 
   void SetPrimaryEnergy   (G4double       ene  )       { fPEne  = ene;  }
   void SetPrimaryTime     (G4double       time )       { fPTime = time; }
@@ -44,7 +44,7 @@ public:
 private:
   
   AnalysisMessenger*    fAnaMessenger;
-  string               fOutFileName;
+  G4String              fOutFileName;
   TFile*                fROOTfile;
   TTree*                fROOTtree;
   

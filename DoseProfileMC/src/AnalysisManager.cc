@@ -19,7 +19,7 @@ AnalysisManager::AnalysisManager()
 {
   ZeroArray();
 
-  fOutFileName = string("output/out_default.root");
+  fOutFileName = G4String("output/out_default.root");
 
   fAnaMessenger = new AnalysisMessenger(this);
 }
