@@ -7,11 +7,10 @@
 #include "G4Point3D.hh"
 #include "G4Transform3D.hh"
 
-#include "TROOT.h"
-#include "TApplication.h"
-#include "TFile.h"
-#include "TSystem.h"
-#include "TTree.h"
+// #include "TApplication.h"
+// #include "TFile.h"
+// #include "TSystem.h"
+// #include "TTree.h"
 
 //---------------------------------------------------------------------------
 
@@ -28,8 +27,8 @@ AnalysisManager::AnalysisManager()
 
 AnalysisManager::~AnalysisManager()
 {
-   fROOTtree->Write();
-   fROOTfile->Close();
+//    fROOTtree->Write();
+//    fROOTfile->Close();
 }
 
 //---------------------------------------------------------------------------
@@ -39,24 +38,24 @@ void AnalysisManager::InitOutput()
 
   
 
-  fROOTfile = new TFile(fOutFileName,"RECREATE","fROOTfile",1);
-  fROOTtree = new TTree("T","Output Tree");
-  fROOTtree->SetAutoSave();
+//   fROOTfile = new TFile(fOutFileName,"RECREATE","fROOTfile",1);
+//   fROOTtree = new TTree("T","Output Tree");
+//   fROOTtree->SetAutoSave();
 
-  // Set Primary Branches
-  fROOTtree->Branch("Prim_E",      &fPEne,   "Prim_E/F"      );
-  fROOTtree->Branch("Prim_Th",     &fPth,    "Prim_Th/F"     );
-  fROOTtree->Branch("Prim_Ph",     &fPph,    "Prim_Ph/F"     );
-  fROOTtree->Branch("Prim_pdg",    &fPpdg,   "Prim_pdg/I"    );
+//   // Set Primary Branches
+//   fROOTtree->Branch("Prim_E",      &fPEne,   "Prim_E/F"      );
+//   fROOTtree->Branch("Prim_Th",     &fPth,    "Prim_Th/F"     );
+//   fROOTtree->Branch("Prim_Ph",     &fPph,    "Prim_Ph/F"     );
+//   fROOTtree->Branch("Prim_pdg",    &fPpdg,   "Prim_pdg/I"    );
   
-  // Set Raw Phantom Step Hit Branches
-  fROOTtree->Branch("Phantom_Nhits", &fRAW_Nhits, "Phantom_Nhits/I");  
-  fROOTtree->Branch("Phantom_pdg",   fRAW_pdg,    "Phantom_pdg[Phantom_Nhits]/I");
-  fROOTtree->Branch("Phantom_id",    fRAW_id,     "Phantom_id[Phantom_Nhits]/I");
-  fROOTtree->Branch("Phantom_x",     fRAW_xpre,   "Phantom_x[Phantom_Nhits]/F"  );
-  fROOTtree->Branch("Phantom_y",     fRAW_ypre,   "Phantom_y[Phantom_Nhits]/F"  );
-  fROOTtree->Branch("Phantom_z",     fRAW_zpre,   "Phantom_z[Phantom_Nhits]/F"  );
-  fROOTtree->Branch("Phantom_Ed",    fRAW_Edep,   "Phantom_Ed[Phantom_Nhits]/F" );
+//   // Set Raw Phantom Step Hit Branches
+//   fROOTtree->Branch("Phantom_Nhits", &fRAW_Nhits, "Phantom_Nhits/I");  
+//   fROOTtree->Branch("Phantom_pdg",   fRAW_pdg,    "Phantom_pdg[Phantom_Nhits]/I");
+//   fROOTtree->Branch("Phantom_id",    fRAW_id,     "Phantom_id[Phantom_Nhits]/I");
+//   fROOTtree->Branch("Phantom_x",     fRAW_xpre,   "Phantom_x[Phantom_Nhits]/F"  );
+//   fROOTtree->Branch("Phantom_y",     fRAW_ypre,   "Phantom_y[Phantom_Nhits]/F"  );
+//   fROOTtree->Branch("Phantom_z",     fRAW_zpre,   "Phantom_z[Phantom_Nhits]/F"  );
+//   fROOTtree->Branch("Phantom_Ed",    fRAW_Edep,   "Phantom_Ed[Phantom_Nhits]/F" );
   
 }
 
@@ -144,7 +143,7 @@ void AnalysisManager::FillTree()
   fPEne   = (float)fPEne;                         
   fPpdg   = (int)  fPPDef->GetPDGEncoding();
   
-  fROOTtree->Fill();
+//   fROOTtree->Fill();
 }
 
 //---------------------------------------------------------------------------

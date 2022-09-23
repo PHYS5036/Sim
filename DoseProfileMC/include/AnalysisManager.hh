@@ -8,8 +8,6 @@
 #include "G4ThreeVector.hh"
 #include "G4ParticleDefinition.hh"
 
-class TTree;
-class TFile;
 
 //---------------------------------------------------------------------------
 
@@ -45,8 +43,8 @@ private:
   
   AnalysisMessenger*    fAnaMessenger;
   G4String              fOutFileName;
-  TFile*                fROOTfile;
-  TTree*                fROOTtree;
+//   TFile*                fROOTfile;
+//   TTree*                fROOTtree;
   
   // Primary
   float               fPEne;
