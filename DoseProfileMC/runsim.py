@@ -4,7 +4,8 @@ import os
 import subprocess
 import sys
 
-particleTypes = ["gamma","proton","ion"]
+#Allowed types of particle
+particleTypes = ["gamma","electron","proton","ion"]
 
 if(len(sys.argv)==3):
     if any(particle == sys.argv[1] for particle in particleTypes):

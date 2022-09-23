@@ -7,10 +7,6 @@
 #include "G4ThreeVector.hh"
 #include "globals.hh"
 
-#include "TFile.h"
-#include "TTree.h"
-#include "TString.h"
-#include "TLorentzVector.h"
 
 //---------------------------------------------------------------------------
 
@@ -30,11 +26,9 @@ public:
   ~PrimaryGeneratorAction();
 
   void GeneratePrimaries (G4Event*);
-  void SetUpROOTInput    (TString filename);
   void SetMode(G4int mode){ fMode = mode; }
   void SetDumpBeam(G4int dump){ fDump = dump; }
 
-  G4int GetNEvents()                  { return static_cast<G4int>(fGenTree->GetEntries()); }
   G4int GetMode()                     { return fMode; }
   G4int GetDumpBeam()                 { return fDump; }
   G4ThreeVector GetVertex()           { return G4ThreeVector(fVx,  fVy,  fVz);  }
@@ -54,19 +48,16 @@ private:
   G4int                      fMode;   
   G4int                      fDump;   
   
-  TFile*                     fGenFile;    
-  TTree*                     fGenTree;  
-  Int_t                      fNGenBranches;   
-  Int_t                      fNevent;
-  Int_t                      fPDG;
-  Float_t                    fVx;
-  Float_t                    fVy;
-  Float_t                    fVz;
-  Float_t                    fPxp;
-  Float_t                    fPyp;
-  Float_t                    fPzp;
-  Float_t                    fEp;
-  Float_t                    fTp;
+  int                      fNevent;
+  int                      fPDG;
+  float                    fVx;
+  float                    fVy;
+  float                    fVz;
+  float                    fPxp;
+  float                    fPyp;
+  float                    fPzp;
+  float                    fEp;
+  float                    fTp;
 
 };
 #endif

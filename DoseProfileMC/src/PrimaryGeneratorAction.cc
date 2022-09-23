@@ -5,9 +5,9 @@
 #include "G4ParticleDefinition.hh"
 #include "Randomize.hh"
 
-#include "TObjArray.h"
-#include "TBranch.h"
-#include "TString.h"
+// #include "TObjArray.h"
+// #include "TBranch.h"
+// #include "TString.h"
 
 #include "PrimaryGeneratorAction.hh"
 #include "PrimaryGeneratorMessenger.hh"
@@ -21,11 +21,8 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
 {
   fGunMessenger       = new PrimaryGeneratorMessenger(this);
 
-  fGenFile            = NULL;
-  fGenTree            = NULL;
 
   fNevent             = 1;
-  fNGenBranches       = 0;
   fDump               = 0;
 
   fParticleTable      = G4ParticleTable::GetParticleTable();
@@ -40,10 +37,6 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
 
 PrimaryGeneratorAction::~PrimaryGeneratorAction()
 {
-  if( fGenFile ) {
-    fGenFile->Close();
-    delete fGenFile;
-   }
   delete fParticleGun;
   delete fParticleSource;
   delete fGunMessenger;
@@ -71,86 +64,10 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
     break;
 
-  case EPGA_ROOT:
-    if(fGenTree) {
-      
-      fGenTree->GetEvent(fNevent++);
-
-      if( fPDG == 150000 ) {
-	//	fPDefinition = fParticleTable->GetIon(6,12,0.0); 
-	fPDefinition = (G4ParticleDefinition*)fIonTable->GetIon(6,12,0.0); 
-	//	G4cout << fIonTable->FindIon(1,1,0.0) << G4endl;
-      }
-      else if( fPDG == 11 ) {
-	fPDefinition = fParticleTable->FindParticle("e-");
-      }
-      else if( fPDG == 2212 ) {
-	fPDefinition = fParticleTable->FindParticle("proton");
-      }
-      else {
-	fPDefinition = fParticleTable->FindParticle("gamma");
-      }
-
-      fParticleGun->SetParticlePosition          ( G4ThreeVector( fVx *cm, fVy *cm, fVz *cm) );
-      fParticleGun->SetParticleDefinition        ( fPDefinition );
-      fParticleGun->SetParticleMomentumDirection ( G4ThreeVector(fPxp, fPyp, fPzp).unit() );
-      fParticleGun->SetParticleEnergy            ( (fEp *MeV) );
-      fParticleGun->GeneratePrimaryVertex(anEvent);
-      
-      
-      fVx          = fParticleGun->GetParticlePosition().getX()/cm;
-      fVy          = fParticleGun->GetParticlePosition().getY()/cm;
-      fVz          = fParticleGun->GetParticlePosition().getZ()/cm;
-      fPxp         = fParticleGun->GetParticleMomentumDirection().getX();
-      fPyp         = fParticleGun->GetParticleMomentumDirection().getY();
-      fPzp         = fParticleGun->GetParticleMomentumDirection().getZ();
-      fEp          = fParticleGun->GetParticleEnergy()/MeV;
-      fTp          = fParticleGun->GetParticleTime();
-      fPDefinition = fParticleGun->GetParticleDefinition();
-
-    break;
-    }
   default:
     G4cout << "Unknown mode given to PrimiaryGeneratorAction (0 for gps or 1 for root)" << G4endl;
   }			       
 }
 
 
-//---------------------------------------------------------------------------
-
-void PrimaryGeneratorAction::SetUpROOTInput(TString filename)
-{
-  
-  fMode = EPGA_ROOT;
-  
-  fGenFile = new TFile(filename);
-  if(!fGenFile)
-    G4cout << "PrimaryGeneratorAction::SetUpRootInput(TString filename) - Didn't find filename" << G4endl;
-  
-  fGenTree       = dynamic_cast<TTree*>(fGenFile->Get("h1"));
-  if(!fGenTree)
-    G4cout << "PrimaryGeneratorAction::SetUpRootInput(TString filename) - Didn't find ntuple h1" << G4endl;
-    
-  fNGenBranches       = fGenTree->GetNbranches();
-  TObjArray* objarray = fGenTree->GetListOfBranches();
-
-  for( Int_t i = 0; i < fNGenBranches; i++ ) {
-    
-    TBranch *branch = dynamic_cast<TBranch*>     (objarray->At(i));
-    TString  bname  = TString( const_cast<char*> (branch->GetName()) );
-
-    if( bname == "X_vtx" ) branch->SetAddress( &fVx );
-    if( bname == "Y_vtx" ) branch->SetAddress( &fVy );
-    if( bname == "Z_vtx" ) branch->SetAddress( &fVz );
-
-    if( bname == "Px_Gam"  ) branch->SetAddress( &fPxp );
-    if( bname == "Py_Gam"  ) branch->SetAddress( &fPyp );
-    if( bname == "Pz_Gam"  ) branch->SetAddress( &fPzp );
-    if( bname == "En_Gam"  ) branch->SetAddress( &fEp  );
-
-    if( bname == "PDG"  ) branch->SetAddress( &fPDG );
-
-  }
-}
-
-//---------------------------------------------------------------------------
+// //---------------------------------------------------------------------------

@@ -25,7 +25,6 @@ class PrimaryGeneratorMessenger: public G4UImessenger
   PrimaryGeneratorAction* fAction;
   G4UIdirectory*          fGunDir;
 
-  G4UIcmdWithAString*     fSetInputCmd;
   G4UIcmdWithAnInteger*   fSetModeCmd;
   G4UIcmdWithAnInteger*   fSetSeedCmd;
 };

@@ -26,7 +26,7 @@ public:
   void InitOutput();
 
   void ZeroArray();
-  void FillArray( Int_t );
+  void FillArray( int );
   void FillTree();
 
   void SetOutFileName  ( TString fname )           { fOutFileName  = fname; }
@@ -52,12 +52,12 @@ private:
   TTree*                fROOTtree;
   
   // Primary
-  Float_t               fPEne;
-  Float_t               fPth;
-  Float_t               fPph;
-  Float_t               fPTime;
+  float               fPEne;
+  float               fPth;
+  float               fPph;
+  float               fPTime;
   G4ParticleDefinition* fPPDef;
-  Int_t                 fPpdg;
+  int                 fPpdg;
   G4ThreeVector         fPdir;
 
   // Step raw
@@ -69,25 +69,25 @@ private:
   G4int                 fStepid;
   G4double              fStepedep;
 
-  static const Int_t    fMaxhits = 50000;
+  static const int    fMaxhits = 50000;
 
-  Int_t                 fRAW_Nhits;
-  Int_t                 fRAW_id[fMaxhits];
-  Float_t               fRAW_time[fMaxhits];
-  Float_t               fRAW_Edep[fMaxhits];
-  Int_t                 fRAW_pdg[fMaxhits];
-  Float_t               fRAW_mass[fMaxhits];
-  Float_t               fRAW_mom[fMaxhits];
-  Float_t               fRAW_px[fMaxhits];
-  Float_t               fRAW_py[fMaxhits];
-  Float_t               fRAW_pz[fMaxhits];
-  Float_t               fRAW_xpre[fMaxhits];
-  Float_t               fRAW_ypre[fMaxhits];
-  Float_t               fRAW_zpre[fMaxhits];
-  Float_t               fRAW_xpost[fMaxhits];
-  Float_t               fRAW_ypost[fMaxhits];
-  Float_t               fRAW_zpost[fMaxhits];
-  Float_t               fRAW_Energy[fMaxhits];
+  int                 fRAW_Nhits;
+  int                 fRAW_id[fMaxhits];
+  float               fRAW_time[fMaxhits];
+  float               fRAW_Edep[fMaxhits];
+  int                 fRAW_pdg[fMaxhits];
+  float               fRAW_mass[fMaxhits];
+  float               fRAW_mom[fMaxhits];
+  float               fRAW_px[fMaxhits];
+  float               fRAW_py[fMaxhits];
+  float               fRAW_pz[fMaxhits];
+  float               fRAW_xpre[fMaxhits];
+  float               fRAW_ypre[fMaxhits];
+  float               fRAW_zpre[fMaxhits];
+  float               fRAW_xpost[fMaxhits];
+  float               fRAW_ypost[fMaxhits];
+  float               fRAW_zpost[fMaxhits];
+  float               fRAW_Energy[fMaxhits];
 
 };
 

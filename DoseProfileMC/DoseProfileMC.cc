@@ -15,6 +15,8 @@
 
 #include "G4VisExecutive.hh"
 
+#include "G4UIExecutive.hh"
+
 //---------------------------------------------------------------------------
 
 int main(int argc, char** argv)
@@ -34,35 +36,24 @@ int main(int argc, char** argv)
   runManager->SetUserAction(event);
 
   G4UImanager * UI         = G4UImanager::GetUIpointer();
-  G4VisManager* visManager = 0;
+  G4String session;
+
+  // Initialize visualization
+  G4VisManager* visManager = new G4VisExecutive("quite");
+  visManager->Initialize();
 
   if (argc==1)   // Define UI session for interactive mode.
     {
-#ifdef G4VIS_USE
-      visManager = new G4VisExecutive;
-      visManager->Initialize();
-#endif
-      G4UIsession * session = 0;
-#ifdef G4UI_USE_TCSH
-      session = new G4UIterminal(new G4UItcsh);
-#else
-      session = new G4UIterminal();
-#endif
-      session->SessionStart();
-      delete session;
+     G4UIExecutive * ui = new G4UIExecutive(argc,argv,session);
+       UI->ApplyCommand("/control/execute macros/vis.mac");
+       ui->SessionStart();
+     delete ui;
     }
   else           // Batch mode
     {
       G4String command = "/control/execute ";
       G4String fileName = argv[1];
       UI->ApplyCommand(command+fileName);
-      if( pga->GetMode()==EPGA_ROOT ) {
-	G4String commandr = "/run/beamOn ";
-	G4int nev = pga->GetNEvents();
-	char snev[50];
-	sprintf( snev, "%d",nev );
-	UI->ApplyCommand(commandr+snev);
-      }
     }
 
   if(visManager) delete visManager;

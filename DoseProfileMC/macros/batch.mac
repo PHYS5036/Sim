@@ -10,7 +10,6 @@
 # Set input and output optBEAM1s
 ##################################################################
 
-/DoseProfileMC/generator/Mode 1
-/DoseProfileMC/generator/InputFile data/Gen_BEAMX_ENERGYY.root
+/DoseProfileMC/generator/Mode 0
 /DoseProfileMC/analysis/setOutputFile data/G4_BEAMX_ENERGYY.root
 

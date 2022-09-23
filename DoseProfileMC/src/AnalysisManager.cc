@@ -39,6 +39,8 @@ AnalysisManager::~AnalysisManager()
 void AnalysisManager::InitOutput()
 { 
 
+  
+
   fROOTfile = new TFile(fOutFileName,"RECREATE","fROOTfile",1);
   fROOTtree = new TTree("T","Output Tree");
   fROOTtree->SetAutoSave();
@@ -84,7 +86,7 @@ void AnalysisManager::ZeroArray()
   fSteptime    = 0;
   fStepedep    = 0;
 
-  for ( Int_t i = 0; i < fMaxhits; i++ ) {
+  for ( int i = 0; i < fMaxhits; i++ ) {
     fRAW_id[i]      = 9999;  
     fRAW_time[i]    = 9999;
     fRAW_Edep[i]    = 9999;
@@ -106,24 +108,24 @@ void AnalysisManager::ZeroArray()
 
 //---------------------------------------------------------------------------
 
-void AnalysisManager::FillArray( Int_t hitn ) 
+void AnalysisManager::FillArray( int hitn ) 
 {
     fRAW_Nhits++;
-    fRAW_id[hitn]     = (Int_t)fStepid;
-    fRAW_pdg[hitn]    = (Int_t)fSteppdef->GetPDGEncoding();
-    fRAW_mass[hitn]   = (Float_t)fSteppdef->GetPDGMass();
-    fRAW_time[hitn]   = (Float_t)fSteptime;                                   
-    fRAW_mom[hitn]    = (Float_t)fStepp3.mag();                             
-    fRAW_px[hitn]     = (Float_t)fStepp3.getX();                             
-    fRAW_py[hitn]     = (Float_t)fStepp3.getY();                             
-    fRAW_pz[hitn]     = (Float_t)fStepp3.getZ();                             
-    fRAW_xpre[hitn]   = (Float_t)fSteppospre.getX();                             
-    fRAW_ypre[hitn]   = (Float_t)fSteppospre.getY();                             
-    fRAW_zpre[hitn]   = (Float_t)fSteppospre.getZ();                             
-    fRAW_xpost[hitn]  = (Float_t)fSteppospost.getX();                             
-    fRAW_ypost[hitn]  = (Float_t)fSteppospost.getY();                             
-    fRAW_zpost[hitn]  = (Float_t)fSteppospost.getZ();                             
-    fRAW_Edep[hitn]   = (Float_t)fStepedep;
+    fRAW_id[hitn]     = (int)fStepid;
+    fRAW_pdg[hitn]    = (int)fSteppdef->GetPDGEncoding();
+    fRAW_mass[hitn]   = (float)fSteppdef->GetPDGMass();
+    fRAW_time[hitn]   = (float)fSteptime;                                   
+    fRAW_mom[hitn]    = (float)fStepp3.mag();                             
+    fRAW_px[hitn]     = (float)fStepp3.getX();                             
+    fRAW_py[hitn]     = (float)fStepp3.getY();                             
+    fRAW_pz[hitn]     = (float)fStepp3.getZ();                             
+    fRAW_xpre[hitn]   = (float)fSteppospre.getX();                             
+    fRAW_ypre[hitn]   = (float)fSteppospre.getY();                             
+    fRAW_zpre[hitn]   = (float)fSteppospre.getZ();                             
+    fRAW_xpost[hitn]  = (float)fSteppospost.getX();                             
+    fRAW_ypost[hitn]  = (float)fSteppospost.getY();                             
+    fRAW_zpost[hitn]  = (float)fSteppospost.getZ();                             
+    fRAW_Edep[hitn]   = (float)fStepedep;
     fRAW_Energy[hitn] = TMath::Sqrt( fRAW_mom[hitn]*fRAW_mom[hitn] 
 				     + fRAW_mass[hitn]*fRAW_mass[hitn] );
 
@@ -138,11 +140,11 @@ void AnalysisManager::FillArray( Int_t hitn )
 void AnalysisManager::FillTree()
 {
   // Primary Variables
-  fPTime  = (Float_t)fPTime;
-  fPth    = (Float_t)fPdir.getTheta();                         
-  fPph    = (Float_t)fPdir.getPhi();                                                      
-  fPEne   = (Float_t)fPEne;                         
-  fPpdg   = (Int_t)  fPPDef->GetPDGEncoding();
+  fPTime  = (float)fPTime;
+  fPth    = (float)fPdir.getTheta();                         
+  fPph    = (float)fPdir.getPhi();                                                      
+  fPEne   = (float)fPEne;                         
+  fPpdg   = (int)  fPPDef->GetPDGEncoding();
   
   fROOTtree->Fill();
 }

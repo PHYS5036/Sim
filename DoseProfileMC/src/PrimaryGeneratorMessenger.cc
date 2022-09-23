@@ -15,11 +15,6 @@ PrimaryGeneratorMessenger::PrimaryGeneratorMessenger( PrimaryGeneratorAction* Gu
   fGunDir = new G4UIdirectory("/DoseProfileMC/generator/");
   fGunDir->SetGuidance("PrimaryGenerator control");
 
-  fSetInputCmd = new G4UIcmdWithAString("/DoseProfileMC/generator/InputFile",this);
-  fSetInputCmd->SetGuidance("Set the file with the input ROOT ntuple");
-  fSetInputCmd->SetParameterName("inputfile",false);
-  fSetInputCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
-
   fSetModeCmd = new G4UIcmdWithAnInteger("/DoseProfileMC/generator/Mode",this);
   fSetModeCmd->SetGuidance("Set the mode of the generator, command line, GPS or ROOT");
   fSetModeCmd->SetParameterName("Mode",false);
@@ -38,7 +33,6 @@ PrimaryGeneratorMessenger::PrimaryGeneratorMessenger( PrimaryGeneratorAction* Gu
 PrimaryGeneratorMessenger::~PrimaryGeneratorMessenger()
 {
   delete fGunDir;
-  delete fSetInputCmd;
   delete fSetModeCmd;
   delete fSetSeedCmd;
 }
@@ -48,9 +42,7 @@ PrimaryGeneratorMessenger::~PrimaryGeneratorMessenger()
 
 void PrimaryGeneratorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 { 
-  if( command == fSetInputCmd )
-    { fAction->SetUpROOTInput(static_cast<TString>(newValue));}
-   
+
   if( command == fSetModeCmd )
      { fAction->SetMode(fSetModeCmd->GetNewIntValue(newValue));}
 
