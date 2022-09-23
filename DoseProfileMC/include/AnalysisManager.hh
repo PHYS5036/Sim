@@ -7,7 +7,6 @@
 
 #include "G4ThreeVector.hh"
 #include "G4ParticleDefinition.hh"
-#include "TVector3.h"
 #include "TString.h"
 
 class TTree;
