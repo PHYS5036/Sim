@@ -1,0 +1,22 @@
+##################################################################
+# Set electromagnetic model and interaction opitons
+##################################################################
+
+/SodiumIodideMC/physics/SetEmModel Standard
+/SodiumIodideMC/physics/SetEmProcess All
+/run/initialize
+
+##################################################################
+# Set input options
+##################################################################
+
+/SodiumIodideMC/generator/Mode 1
+/SodiumIodideMC/generator/InputFile ~/data/Gen_SOURCE1.root
+
+##################################################################
+# Set output options
+##################################################################
+
+/SodiumIodideMC/analysis/setOutputFile ~/data/G4_SOURCE1.root
+
+##################################################################

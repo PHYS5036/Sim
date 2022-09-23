@@ -1,0 +1,1 @@
+/home/simon/geant4/Sim/SodiumIodideMC/install/bin/SodiumIodideMC
