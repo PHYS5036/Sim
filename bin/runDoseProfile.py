@@ -53,7 +53,7 @@ if(len(sys.argv)>=3):
         
         f.write("/DoseProfileMC/detector/TumourOn "+tumourFlag+"\n")
         f.write("/DoseProfileMC/detector/TumourRadius 1.0\n")
-        f.write("/DoseProfileMC/detector/TumourHeight 1.0\n")
+        f.write("/DoseProfileMC/detector/TumourHeight 0.0\n")
         
         f.write("/DoseProfileMC/physics/addPhysics "+physicsList[physicsFlag]+"\n")
         f.write("/run/initialize\n")
