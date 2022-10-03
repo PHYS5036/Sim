@@ -12,10 +12,12 @@ if(len(sys.argv)==3):
         float(sys.argv[2])
         
     else:
-        print('WARNING, wrong input: please re-run as eg ./runsim.sh [beam type] [energy]')
+        print('WARNING, wrong input: please re-run as eg ./runsim.py [beam type] [energy]')
         print('where [beam type] is either gamma, electron, proton or ion and [energy] is in MeV')
+
+    
 else:
-    print('WARNING, wrong input: please re-run as eg ./runsim.sh [beam type] [energy]')
+    print('WARNING, wrong input: please re-run as eg ./runsim.py [beam type] [energy]')
     print('where [beam type] is either gamma, electron, proton or ion and [energy] is in MeV')
 
 

@@ -72,7 +72,6 @@ void AnalysisManager::InitOutput()
 void AnalysisManager::WriteOutput()
 { 
 
-
   std::ofstream outfile;
   outfile.open(fOutFileName);
 
@@ -85,7 +84,6 @@ void AnalysisManager::WriteOutput()
 
   for(int i=0; i<nPixX; i++){
     for(int j=0; j<nPixY; j++){
-      inputPos[i][j] = 0;
       for(int k=0; k<nPixZ; k++){
 	
 	outfile << i << ", " << j << ", " << k;
@@ -211,8 +209,6 @@ void AnalysisManager::FillTree()
 
   }
 
-
-//   fROOTtree->Fill();
 }
 
 //---------------------------------------------------------------------------

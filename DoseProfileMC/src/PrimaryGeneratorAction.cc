@@ -5,10 +5,6 @@
 #include "G4ParticleDefinition.hh"
 #include "Randomize.hh"
 
-// #include "TObjArray.h"
-// #include "TBranch.h"
-// #include "TString.h"
-
 #include "PrimaryGeneratorAction.hh"
 #include "PrimaryGeneratorMessenger.hh"
 
@@ -47,9 +43,6 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
-//   switch(fMode) {
-
-//   case EPGA_GPS:
 
     fParticleSource->GeneratePrimaryVertex(anEvent);
 
@@ -62,15 +55,6 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
     fEp          = fParticleSource->GetParticleEnergy()/GeV;
     fTp          = fParticleSource->GetParticleTime();
     fPDefinition = fParticleSource->GetParticleDefinition();
-
-//     G4cout << fVx << " " << fVy << " " << fVz << G4endl;
-//     G4cout << fPxp << " " << fPyp << " " << fPzp << G4endl;
-
-   //  break;
-
-//   default:
-//     G4cout << "Unknown mode given to PrimiaryGeneratorAction (0 for gps or 1 for root)" << G4endl;
-//   }			       
 }
 
 
