@@ -30,6 +30,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
   fPDefinition        = NULL;
 
   fParticleSource     = new G4GeneralParticleSource();
+  
   fParticleGun        = new G4ParticleGun(1);
 }
 

@@ -78,10 +78,10 @@ void AnalysisManager::WriteOutput()
 
   std::cout << fOutFileName << std::endl;
 
-  outfile << "xmin, xmax, ymin, ymax, zmin, zmax \n";
+  outfile << "xmin,xmax,ymin,ymax,zmin,zmax\n";
   outfile << minX << ", "<< maxX << ", " << minY << ", "<< maxY << ", " << minZ << ", "<< maxZ <<  "\n";
 
-  outfile << "x, y, z, lepton, meson, baryon, ion \n";
+  outfile << "x,y,z,lepton,meson,baryon,ion\n";
 
   for(int i=0; i<nPixX; i++){
     for(int j=0; j<nPixY; j++){
