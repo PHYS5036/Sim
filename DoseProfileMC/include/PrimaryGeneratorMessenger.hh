@@ -27,6 +27,9 @@ class PrimaryGeneratorMessenger: public G4UImessenger
 
   G4UIcmdWithAnInteger*   fSetModeCmd;
   G4UIcmdWithAnInteger*   fSetSeedCmd;
+
+  
+
 };
 #endif
 

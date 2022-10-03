@@ -46,9 +46,9 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
-  switch(fMode) {
+//   switch(fMode) {
 
-  case EPGA_GPS:
+//   case EPGA_GPS:
 
     fParticleSource->GeneratePrimaryVertex(anEvent);
 
@@ -62,11 +62,14 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
     fTp          = fParticleSource->GetParticleTime();
     fPDefinition = fParticleSource->GetParticleDefinition();
 
-    break;
+//     G4cout << fVx << " " << fVy << " " << fVz << G4endl;
+//     G4cout << fPxp << " " << fPyp << " " << fPzp << G4endl;
 
-  default:
-    G4cout << "Unknown mode given to PrimiaryGeneratorAction (0 for gps or 1 for root)" << G4endl;
-  }			       
+   //  break;
+
+//   default:
+//     G4cout << "Unknown mode given to PrimiaryGeneratorAction (0 for gps or 1 for root)" << G4endl;
+//   }			       
 }
 
 

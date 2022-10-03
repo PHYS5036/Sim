@@ -43,16 +43,23 @@ private:
   
   AnalysisMessenger*    fAnaMessenger;
   G4String              fOutFileName;
-//   TFile*                fROOTfile;
-//   TTree*                fROOTtree;
+
+  const static int nTypes = 4; //leptons, mesons, baryons, ions
+  std::vector<int> pdg_limit = {100,1000,10000};
+
+  const static int nPixX  = 100;
+  const static int nPixY  = 100;
+  const static int nPixZ  = 100;
+ 
+  double eDep[nTypes][nPixX][nPixY][nPixZ];
   
   // Primary
-  float               fPEne;
-  float               fPth;
-  float               fPph;
-  float               fPTime;
+  float                 fPEne;
+  float                 fPth;
+  float                 fPph;
+  float                 fPTime;
   G4ParticleDefinition* fPPDef;
-  int                 fPpdg;
+  int                   fPpdg;
   G4ThreeVector         fPdir;
 
   // Step raw

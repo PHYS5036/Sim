@@ -1,4 +1,4 @@
-/DoseProfileMC/detector/TumourOn 0
-/DoseProfileMC/detector/TumourRadius 0.5
+/DoseProfileMC/detector/TumourOn 1
+/DoseProfileMC/detector/TumourRadius 10.0
 /DoseProfileMC/detector/TumourHeight 0.0
 

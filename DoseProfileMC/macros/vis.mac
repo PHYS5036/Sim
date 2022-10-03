@@ -10,15 +10,16 @@
 # Set visualisation options
 ##################################################################
 
+#/vis/open OGLIX
 /vis/open OGLSQt
 #/vis/scene/create
 #/vis/viewer/create OGLIX
 /vis/viewer/set/viewpointThetaPhi 70 20
 #/vis/viewer/set/style surface
 /vis/drawVolume
-#/vis/scene/add/trajectories
-#/vis/modeling/trajectories/create/drawByCharge
-#/vis/scene/endOfEventAction accumulate
+/vis/scene/add/trajectories
+/vis/modeling/trajectories/create/drawByCharge
+/vis/scene/endOfEventAction accumulate
 
 # Re-establish auto refreshing and verbosity:
 /vis/viewer/flush
@@ -30,13 +31,14 @@
 ##################################################################
 
 /gps/particle   proton
-/gps/direction  0 -1 0
+/gps/energy     100 MeV
+/gps/direction  -1 0 0
 /gps/pos/type   Plane
 /gps/pos/shape  Circle
 /gps/pos/radius 1 mm
-/gps/pos/centre 0 100 0
+/gps/pos/centre 100 0 0 mm
 /gps/pos/rot1   0 1 0
-/gps/pos/rot1   0 0 1
+/gps/pos/rot2   0 0 1
 
 ##################################################################
 

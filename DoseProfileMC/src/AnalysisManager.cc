@@ -18,7 +18,7 @@ AnalysisManager::AnalysisManager()
 {
   ZeroArray();
 
-  fOutFileName = G4String("output/out_default.root");
+  fOutFileName = G4String("output/out_default.csv");
 
   fAnaMessenger = new AnalysisMessenger(this);
 }
