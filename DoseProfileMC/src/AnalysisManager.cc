@@ -191,13 +191,15 @@ void AnalysisManager::FillTree()
     int x_i     = nPixX*(fRAW_xpre[i]-minX)/(maxX-minX);
     int y_i     = nPixY*(fRAW_ypre[i]-minY)/(maxY-minY);
     int z_i     = nPixZ*(fRAW_zpre[i]-minZ)/(maxZ-minZ);
-    
+
+
     if(x_i<0) x_i=0;
     if(y_i<0) y_i=0;
     if(z_i<0) z_i=0;
-    if(x_i>=maxX) x_i=nPixX-1;
-    if(y_i>=maxY) y_i=nPixY-1;
-    if(z_i>=maxZ) z_i=nPixZ-1;
+    if(x_i>=nPixX) x_i=nPixX-1;
+    if(y_i>=nPixY) y_i=nPixY-1;
+    if(z_i>=nPixZ) z_i=nPixZ-1;
+
 
     int pdg_i = 0;
     for(int limit : pdg_limit){
