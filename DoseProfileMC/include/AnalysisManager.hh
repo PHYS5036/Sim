@@ -49,8 +49,8 @@ private:
   std::vector<int> pdg_limit = {100,1000,10000};
 
   const static int nPixX  = 100;
-  const static int nPixY  = 10;
-  const static int nPixZ  = 10;
+  const static int nPixY  = 100;
+  const static int nPixZ  = 100;
 
   int minX = -100;
   int minY = -10;
