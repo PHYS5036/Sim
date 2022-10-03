@@ -7,10 +7,8 @@
 #include "G4Point3D.hh"
 #include "G4Transform3D.hh"
 
-// #include "TApplication.h"
-// #include "TFile.h"
-// #include "TSystem.h"
-// #include "TTree.h"
+#include <iostream>
+#include <fstream>
 
 //---------------------------------------------------------------------------
 
@@ -27,15 +25,26 @@ AnalysisManager::AnalysisManager()
 
 AnalysisManager::~AnalysisManager()
 {
-//    fROOTtree->Write();
-//    fROOTfile->Close();
+
 }
 
 //---------------------------------------------------------------------------
 
 void AnalysisManager::InitOutput()
 { 
-
+  
+  for(int i=0; i<nPixX; i++){
+    for(int j=0; j<nPixY; j++){
+      inputPos[i][j] = 0;
+      for(int k=0; k<nPixZ; k++){
+	for(int l=0; l<nTypes; l++){
+	  
+	  eDep[i][j][k][l] = 0;
+	  
+	}     
+      }
+    }
+  }
   
 
 //   fROOTfile = new TFile(fOutFileName,"RECREATE","fROOTfile",1);
@@ -57,6 +66,40 @@ void AnalysisManager::InitOutput()
 //   fROOTtree->Branch("Phantom_z",     fRAW_zpre,   "Phantom_z[Phantom_Nhits]/F"  );
 //   fROOTtree->Branch("Phantom_Ed",    fRAW_Edep,   "Phantom_Ed[Phantom_Nhits]/F" );
   
+}
+//---------------------------------------------------------------------------
+
+void AnalysisManager::WriteOutput()
+{ 
+
+
+  std::ofstream outfile;
+  outfile.open(fOutFileName);
+
+  std::cout << fOutFileName << std::endl;
+
+  outfile << "xmin, xmax, ymin, ymax, zmin, zmax \n";
+  outfile << minX << ", "<< maxX << ", " << minY << ", "<< maxY << ", " << minZ << ", "<< maxZ <<  "\n";
+
+  outfile << "x, y, z, lepton, meson, baryon, ion \n";
+
+  for(int i=0; i<nPixX; i++){
+    for(int j=0; j<nPixY; j++){
+      inputPos[i][j] = 0;
+      for(int k=0; k<nPixZ; k++){
+	
+	outfile << i << ", " << j << ", " << k;
+
+	for(int l=0; l<nTypes; l++){
+	  outfile << ", " << eDep[i][j][k][l];
+	}     
+	outfile << "\n";
+      }
+    }
+  }
+
+  outfile.close();
+
 }
 
 //---------------------------------------------------------------------------
@@ -125,7 +168,7 @@ void AnalysisManager::FillArray( int hitn )
     fRAW_Edep[hitn]   = (float)fStepedep;
     fRAW_Energy[hitn] = sqrt( fRAW_mom[hitn]*fRAW_mom[hitn] 
 				     + fRAW_mass[hitn]*fRAW_mass[hitn] );
-
+ 
     fRAW_xpre[hitn]   = (fRAW_xpre[hitn] + fRAW_xpost[hitn])/2.;
     fRAW_ypre[hitn]   = (fRAW_ypre[hitn] + fRAW_ypost[hitn])/2.;
     fRAW_zpre[hitn]   = (fRAW_zpre[hitn] + fRAW_zpost[hitn])/2.;
@@ -143,6 +186,30 @@ void AnalysisManager::FillTree()
   fPEne   = (float)fPEne;                         
   fPpdg   = (int)  fPPDef->GetPDGEncoding();
   
+  for(int i=0; i<fRAW_Nhits; i++){
+
+    int x_i     = nPixX*(fRAW_xpre[i]-minX)/(maxX-minX);
+    int y_i     = nPixY*(fRAW_ypre[i]-minY)/(maxY-minY);
+    int z_i     = nPixZ*(fRAW_zpre[i]-minZ)/(maxZ-minZ);
+    
+    if(x_i<0) x_i=0;
+    if(y_i<0) y_i=0;
+    if(z_i<0) z_i=0;
+    if(x_i>=maxX) x_i=nPixX-1;
+    if(y_i>=maxY) y_i=nPixY-1;
+    if(z_i>=maxZ) z_i=nPixZ-1;
+
+    int pdg_i = 0;
+    for(int limit : pdg_limit){
+      if(fRAW_pdg[i]<limit)break;
+      pdg_i++;
+    }
+
+    eDep[x_i][y_i][z_i][pdg_i] += fRAW_Energy[i];
+
+  }
+
+
 //   fROOTtree->Fill();
 }
 

@@ -44,10 +44,10 @@ int main(int argc, char** argv)
 
   if (argc==1)   // Define UI session for interactive mode.
     {
-     G4UIExecutive * ui = new G4UIExecutive(argc,argv,session);
-       UI->ApplyCommand("/control/execute macros/vis.mac");
-       ui->SessionStart();
-     delete ui;
+      G4UIExecutive * ui = new G4UIExecutive(argc,argv,session);
+      UI->ApplyCommand("/control/execute macros/vis.mac");
+      ui->SessionStart();
+      delete ui;
     }
   else           // Batch mode
     {
@@ -56,8 +56,9 @@ int main(int argc, char** argv)
       UI->ApplyCommand(command+fileName);
     }
 
-  if(visManager) delete visManager;
-  delete anaManager;
+  anaManager->WriteOutput();
+
+  delete visManager;
   delete runManager;
 
   return 0;

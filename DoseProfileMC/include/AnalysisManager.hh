@@ -19,6 +19,7 @@ public:
   ~AnalysisManager();
 
   void InitOutput();
+  void WriteOutput();
 
   void ZeroArray();
   void FillArray( int );
@@ -42,17 +43,25 @@ public:
 private:
   
   AnalysisMessenger*    fAnaMessenger;
-  G4String              fOutFileName;
+  G4String              fOutFileName = "temp.csv";
 
   const static int nTypes = 4; //leptons, mesons, baryons, ions
   std::vector<int> pdg_limit = {100,1000,10000};
 
-  const static int nPixX  = 100;
-  const static int nPixY  = 100;
-  const static int nPixZ  = 100;
+  const static int nPixX  = 10;
+  const static int nPixY  = 10;
+  const static int nPixZ  = 10;
+
+  int minX = -10;
+  int minY = -10;
+  int minZ = -10;
+  int maxX = 10;
+  int maxY = 10;
+  int maxZ = 10;
  
-  double eDep[nTypes][nPixX][nPixY][nPixZ];
-  
+  double eDep[nPixX][nPixY][nPixZ][nTypes];
+  double inputPos[nPixX][nPixY];
+
   // Primary
   float                 fPEne;
   float                 fPth;
@@ -90,6 +99,11 @@ private:
   float               fRAW_ypost[fMaxhits];
   float               fRAW_zpost[fMaxhits];
   float               fRAW_Energy[fMaxhits];
+
+  int                 index_x[fMaxhits];
+  int                 index_y[fMaxhits];
+  int                 index_z[fMaxhits];
+  int                 index_pdg[fMaxhits];
 
 };
 
