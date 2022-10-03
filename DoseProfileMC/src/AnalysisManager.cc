@@ -78,8 +78,8 @@ void AnalysisManager::WriteOutput()
 
   std::cout << fOutFileName << std::endl;
 
-  outfile << "xmin,xmax,ymin,ymax,zmin,zmax\n";
-  outfile << minX << ", "<< maxX << ", " << minY << ", "<< maxY << ", " << minZ << ", "<< maxZ <<  "\n";
+  outfile << "xbins,xmin,xmax,ybins,ymin,ymax,zbins,zmin,zmax\n";
+  outfile << nPixX << "," << minX << ", "<< maxX << ", " << nPixY << "," << minY << ", "<< maxY << ", " << nPixZ << "," << minZ << ", "<< maxZ <<  "\n";
 
   outfile << "x,y,z,lepton,meson,baryon,ion\n";
 
