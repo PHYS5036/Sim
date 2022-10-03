@@ -17,8 +17,8 @@
 /gps/pos/type   Plane
 /gps/pos/shape  Circle
 /gps/pos/radius 1 mm
-/gps/pos/centre 100 0 0 mm
-/gps/pos/rot1   0 1 0
+/gps/pos/centre 0 100 0 mm
+/gps/pos/rot1   1 0 0
 /gps/pos/rot2   0 0 1
 
 ##################################################################
