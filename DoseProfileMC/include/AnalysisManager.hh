@@ -52,11 +52,11 @@ private:
   const static int nPixY  = 100;
   const static int nPixZ  = 100;
 
-  int minX = -100;
-  int minY = -10;
+  int minX = -10;
+  int minY = -100;
   int minZ = -10;
-  int maxX = 100;
-  int maxY = 10;
+  int maxX = 10;
+  int maxY = 100;
   int maxZ = 10;
  
   double eDep[nPixX][nPixY][nPixZ][nTypes][2];
