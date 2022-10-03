@@ -59,7 +59,7 @@ private:
   int maxY = 10;
   int maxZ = 10;
  
-  double eDep[nPixX][nPixY][nPixZ][nTypes];
+  double eDep[nPixX][nPixY][nPixZ][nTypes][2];
   double inputPos[nPixX][nPixY];
 
   // Primary

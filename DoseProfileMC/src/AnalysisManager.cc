@@ -38,9 +38,11 @@ void AnalysisManager::InitOutput()
       inputPos[i][j] = 0;
       for(int k=0; k<nPixZ; k++){
 	for(int l=0; l<nTypes; l++){
+	  for(int m=0; m<nTypes; m++){
 	  
-	  eDep[i][j][k][l] = 0;
-	  
+	    eDep[i][j][k][l][m] = 0;
+
+	  }
 	}     
       }
     }
@@ -80,7 +82,7 @@ void AnalysisManager::WriteOutput()
   outfile << "xbins,xmin,xmax,ybins,ymin,ymax,zbins,zmin,zmax\n";
   outfile << nPixX << "," << minX << ", "<< maxX << ", " << nPixY << "," << minY << ", "<< maxY << ", " << nPixZ << "," << minZ << ", "<< maxZ <<  "\n";
 
-  outfile << "x,y,z,lepton,meson,baryon,ion\n";
+  outfile << "x,y,z,lepton,leptonT,meson,mesonT,baryon,baryonT,ion,ionT\n";
 
   for(int i=0; i<nPixX; i++){
     for(int j=0; j<nPixY; j++){
@@ -89,7 +91,9 @@ void AnalysisManager::WriteOutput()
 	outfile << i << ", " << j << ", " << k;
 
 	for(int l=0; l<nTypes; l++){
-	  outfile << ", " << eDep[i][j][k][l];
+	  for(int m=0; m<2; m++){
+	    outfile << ", " << eDep[i][j][k][l][m];
+	  }
 	}     
 	outfile << "\n";
       }
@@ -205,7 +209,9 @@ void AnalysisManager::FillTree()
       pdg_i++;
     }
 
-    eDep[x_i][y_i][z_i][pdg_i] += fRAW_Energy[i];
+    int hit_id = fRAW_id[i];
+
+    eDep[x_i][y_i][z_i][pdg_i][hit_id] += fRAW_Energy[i];
 
   }
 
