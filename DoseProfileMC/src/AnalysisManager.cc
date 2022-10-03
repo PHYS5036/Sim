@@ -38,7 +38,7 @@ void AnalysisManager::InitOutput()
       inputPos[i][j] = 0;
       for(int k=0; k<nPixZ; k++){
 	for(int l=0; l<nTypes; l++){
-	  for(int m=0; m<nTypes; m++){
+	  for(int m=0; m<2; m++){
 	  
 	    eDep[i][j][k][l][m] = 0;
 
