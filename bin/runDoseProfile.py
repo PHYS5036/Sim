@@ -37,10 +37,12 @@ if(len(sys.argv)>=3):
         
         if(len(sys.argv)>=5):
             tumourFlag = sys.argv[4]
+        if(tumourFlag==1):
             outName = outName + "Tumour_"
             
         if(len(sys.argv)>=6):
             physicsFlag = int(sys.argv[5])
+        if(physicsFlag==1):    
             outName = outName + "Hadronic_"
 
         #Construct output file name
@@ -83,7 +85,7 @@ if(len(sys.argv)>=3):
 
         
     else:
-        print('WARNING, wrong input: please re-run as eg ./runsim.py [beam type] [energy]')
+        print('WARNING, wrong input: please re-run as eg ./runsim.py [beam type] [energy] [N events] [Tumour 0/1] [Hadronic 0/1]')
         print('where [beam type] is either gamma, electron, proton or ion and [energy] is in MeV')
 
     
