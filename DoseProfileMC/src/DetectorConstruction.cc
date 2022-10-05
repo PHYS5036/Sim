@@ -33,7 +33,7 @@ using namespace CLHEP;
 
 //---------------------------------------------------------------------------
 
-DetectorConstruction::DetectorConstruction()
+DetectorConstruction::DetectorConstruction(int commandLength)
 {
   fDetMessenger = new DetectorMessenger(this);
 
@@ -42,9 +42,11 @@ DetectorConstruction::DetectorConstruction()
   fTumourRadius = 0.5;
   fTumourHeight = 0.0;
   
-  G4UImanager* UI = G4UImanager::GetUIpointer();
-  G4String command = "/control/execute macros/DetectorSetup.mac";
-  UI->ApplyCommand(command);
+  if(commandLength==1){
+    G4UImanager* UI = G4UImanager::GetUIpointer();
+    G4String command = "/control/execute macros/DetectorSetup.mac";
+    UI->ApplyCommand(command);
+  }
 
 }
 

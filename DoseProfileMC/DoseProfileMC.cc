@@ -29,7 +29,7 @@ int main(int argc, char** argv)
   PrimaryGeneratorAction* pga        = new PrimaryGeneratorAction();
   AnalysisManager*        anaManager = new AnalysisManager();
   EventAction*            event      = new EventAction( anaManager, pga );
-  DetectorConstruction*   detCon     = new DetectorConstruction();
+  DetectorConstruction*   detCon     = new DetectorConstruction(argc);
   runManager->SetUserInitialization(detCon);
 
   runManager->SetUserAction(pga);

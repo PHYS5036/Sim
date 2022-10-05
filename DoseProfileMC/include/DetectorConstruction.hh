@@ -15,7 +15,7 @@ class DetectorMessenger;
 class DetectorConstruction : public G4VUserDetectorConstruction
 {
   public:
-  DetectorConstruction();
+  DetectorConstruction(int commandLength);
   ~DetectorConstruction();
 
   G4VPhysicalVolume* Construct();
