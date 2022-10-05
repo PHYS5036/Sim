@@ -37,7 +37,7 @@ if(len(sys.argv)>=3):
         
         if(len(sys.argv)>=5):
             tumourFlag = sys.argv[4]
-        if(tumourFlag==1):
+        if(int(tumourFlag)==1):
             outName = outName + "Tumour_"
             
         if(len(sys.argv)>=6):
