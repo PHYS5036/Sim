@@ -62,6 +62,10 @@ if(len(sys.argv)>=3):
         f.write("/run/initialize\n")
 
         f.write("/gps/particle "+particleDict[partName]+"\n")
+        if(partname=="ion"):
+            f.write("/gps/ion 6 12 6\n")
+            
+        
         f.write("/gps/energy "+sys.argv[2]+" MeV\n")
         f.write("/gps/direction 0 -1 0\n")
         f.write("/gps/pos/type Plane\n")
