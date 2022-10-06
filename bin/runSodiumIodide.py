@@ -25,7 +25,7 @@ if(len(sys.argv)>=2):
         #---------------------
         # Make file names
         #---------------------
-        sourcePropName = "SodiumIodideMC/macros/"+sourceName+".txt"
+        sourcePropName = "/SodiumIodideMC/macros/"+sourceName+".txt"
         genName = "Gen_"+sourceName+".root"
         simName = "G4_" +sourceName+".root"
         pdfName = "G4_" +sourceName+".pdf"
