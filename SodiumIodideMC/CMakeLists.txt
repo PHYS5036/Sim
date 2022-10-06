@@ -6,8 +6,8 @@ find_package(Geant4 REQUIRED)
 
 ## Get the ROOT config
 find_package(ROOT "6.22" REQUIRED)
-set(INC_ROOT ${ROOT_INCLUDE_DIR})
-set(LIB_ROOT ${ROOT_LIBRARY_DIR})
+set(INC_ROOT ${ROOT_INCLUDE_DIRS})
+set(LIB_ROOT ${ROOT_LIBRARIES})
 
 #include_directories(${Geant4_INCLUDE_DIRS} ${INC_ROOT})
 
