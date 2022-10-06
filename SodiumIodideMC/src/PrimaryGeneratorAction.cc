@@ -8,6 +8,7 @@
 #include "TObjArray.h"
 #include "TBranch.h"
 #include "TString.h"
+#include "TFile.h"
 
 #include "PrimaryGeneratorAction.hh"
 #include "PrimaryGeneratorMessenger.hh"
