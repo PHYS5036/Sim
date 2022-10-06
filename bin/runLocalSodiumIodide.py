@@ -15,7 +15,7 @@ nEvents = "250000"
 simdir = os.environ.get('SIM_DIR')
 
 #Check python arguments
-if(len(sys.argv)>=3):
+if(len(sys.argv)>=2):
     if any(source == sys.argv[1] for source in sourceTypes):
         sourceName = sys.argv[1]
 
