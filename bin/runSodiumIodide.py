@@ -57,14 +57,14 @@ if(len(sys.argv)>=2):
         #---------------------
         # Run Sim code
         #---------------------
-        subprocess.run(["SodiumIodideMC","-b","-q",macroName])
+        subprocess.run(["SodiumIodideMC",macroName])
 
         os.remove(macroName)
 
         #---------------------
         # Run Smear code
         #---------------------
-        subprocess.run(["root",simdir+"/SodiumIodideMC/SmearSpectrum.C+(\""+simName+"\")"])
+        subprocess.run(["root","-b","-q",simdir+"/SodiumIodideMC/SmearSpectrum.C+(\""+simName+"\")"])
         
         os.remove(genName)
         os.remove(simName)
