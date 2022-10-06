@@ -23,9 +23,9 @@
 using namespace std;
 
 void GenerateSpectrum( const char* specname = "macros/SOURCE1.txt", 
-		       float distance = 5.0,
+		       const char* outname  = "~/data/Gen_SOURCE1.root",
 		       int   nevents  = 250000, 
-		       const char* outname  = "~/data/Gen_SOURCE1.root" )
+		       float distance = 5.0 )
 {
 
   //  -----------------------------------------------------------------------------
