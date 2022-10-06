@@ -48,7 +48,7 @@ if(len(sys.argv)>=2):
         f.write("/SodiumIodideMC/detector/AbsorberThickness 10.0 \n")
         f.write("/SodiumIodideMC/physics/SetEmModel Standard \n")
         f.write("/SodiumIodideMC/physics/SetEmProcess All \n")
-        f.write("/run/initialize")
+        f.write("/run/initialize \n")
 
         f.write("/SodiumIodideMC/generator/Mode 1 \n")
         f.write("/SodiumIodideMC/generator/InputFile " + genName +" \n")
