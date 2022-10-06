@@ -206,7 +206,7 @@ void AnalysisManager::FillTree()
 
     int hit_id = fRAW_id[i];
 
-    eDep[x_i][y_i][z_i][pdg_i][hit_id] += fRAW_Energy[i];
+    eDep[x_i][y_i][z_i][pdg_i][hit_id] += fRAW_Edep[i];
 
   }
 
