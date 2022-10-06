@@ -28,16 +28,18 @@ using namespace CLHEP;
 
 //---------------------------------------------------------------------------
 
-DetectorConstruction::DetectorConstruction( PrimaryGeneratorAction* pga )
+DetectorConstruction::DetectorConstruction( PrimaryGeneratorAction* pga,int commandLength )
 {
   fPGA = pga;
   fDetMessenger = new DetectorMessenger(this);
 
   fNistManager  = G4NistManager::Instance();
 
-  G4UImanager* UI = G4UImanager::GetUIpointer();
-  G4String command = "/control/execute macros/DetectorSetup.mac";
-  UI->ApplyCommand(command);
+  if(commandLength==1){
+    G4UImanager* UI = G4UImanager::GetUIpointer();
+    G4String command = "/control/execute macros/DetectorSetup.mac";
+    UI->ApplyCommand(command);
+  }
 }
 
 //---------------------------------------------------------------------------

@@ -240,7 +240,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4VisAttributes* red     = new G4VisAttributes( G4Colour(1.0,0.0,0.0)   );
   G4VisAttributes* cyan    = new G4VisAttributes( G4Colour(0.0,1.0,1.0)   );
 
-  expHall_log->SetVisAttributes(G4VisAttributes::Invisible);
+  expHall_log->SetVisAttributes(G4VisAttributes::GetInvisible());
   det_log->SetVisAttributes(red);
   pmt_log->SetVisAttributes(cyan);
     

@@ -43,7 +43,9 @@ if(len(sys.argv)>=2):
         # Write Macro file
         #---------------------
         f = open(macroName, "w")
-
+        f.write("/SodiumIodideMC/detector/AbsorberOn 0")
+        f.write("/SodiumIodideMC/detector/AbsorberMaterial G4_AIR")
+        f.write("/SodiumIodideMC/detector/AbsorberThickness 10.0")
         f.write("/SodiumIodideMC/physics/SetEmModel Standard")
         f.write("/SodiumIodideMC/physics/SetEmProcess All")
         f.write("/run/initialize")

@@ -16,7 +16,7 @@ class PrimaryGeneratorAction;
 class DetectorConstruction : public G4VUserDetectorConstruction
 {
   public:
-  DetectorConstruction( PrimaryGeneratorAction* );
+  DetectorConstruction( PrimaryGeneratorAction*, int commands=1 );
   ~DetectorConstruction();
 
   G4VPhysicalVolume* Construct();
