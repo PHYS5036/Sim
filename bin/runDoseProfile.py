@@ -8,6 +8,7 @@ macroName = "runmacro.mac"
 
 #Allowed types of particle
 particleTypes = ["gamma","electron","proton","ion"]
+particleDict  = {"gamma":"gamma", "electron":"e-", "proton":"proton", "ion":"ion"}
 
 #Physics flags
 physicsList  = ['standard_opt3','QGSP_BIC_EMY']
@@ -60,7 +61,7 @@ if(len(sys.argv)>=3):
         f.write("/DoseProfileMC/physics/addPhysics "+physicsList[physicsFlag]+"\n")
         f.write("/run/initialize\n")
 
-        f.write("/gps/particle "+partName+"\n")
+        f.write("/gps/particle "+particleDict[partName]+"\n")
         f.write("/gps/energy "+sys.argv[2]+" MeV\n")
         f.write("/gps/direction 0 -1 0\n")
         f.write("/gps/pos/type Plane\n")
@@ -76,10 +77,10 @@ if(len(sys.argv)>=3):
         #--------------------------
         # Run simulation
         #--------------------------
-        subprocess.run(["DoseProfileMC",macroName])
+        subprocess.run(["./DoseProfileMC",macroName])
 
 
-        os.remove(macroName)
+        #os.remove(macroName)
 
 
 
