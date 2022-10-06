@@ -1,11 +1,11 @@
 #!/bin/bash
 
-mkdir -p ~/data
+export SIM_DIR=/local/cern/software/Sim
 
 cp -n ~/.bashrc ~/bashrc.orig
-cp /local/cern/software/Sim/bashrc ~/.bashrc
+cp $SIM_DIR/bashrc ~/.bashrc
 
-mkdir ~/data
+mkdir -p ~/data
 cd ~/data
 cp -n /local/cern/software/Notebooks/DoseProfileAnalysis.ipynb ./
 
