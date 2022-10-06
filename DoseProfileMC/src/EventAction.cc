@@ -87,6 +87,8 @@ void EventAction::EndOfEventAction(const G4Event* evt)
     }
   }
 
+  fAnaManager->SetEventN(event_id);
+
 }
 
 //---------------------------------------------------------------------------

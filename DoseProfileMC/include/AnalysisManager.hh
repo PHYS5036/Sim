@@ -40,6 +40,9 @@ public:
   void SetStepID        ( G4int          sid )       { fStepid   = sid;   }
   void SetStepEdep      ( G4double       sedep)      { fStepedep = sedep; }
 
+  void SetEventN        ( G4int          eid )       { fEventN   = eid;   }
+
+
 private:
   
   AnalysisMessenger*    fAnaMessenger;
@@ -58,6 +61,8 @@ private:
   int maxX = 10;
   int maxY = 100;
   int maxZ = 10;
+
+  int fEventN = 0;
  
   double eDep[nPixX][nPixY][nPixZ][nTypes][2];
   double inputPos[nPixX][nPixY];
