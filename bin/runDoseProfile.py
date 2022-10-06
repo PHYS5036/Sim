@@ -62,7 +62,7 @@ if(len(sys.argv)>=3):
         f.write("/run/initialize\n")
 
         f.write("/gps/particle "+particleDict[partName]+"\n")
-        if(partname=="ion"):
+        if(partName=="ion"):
             f.write("/gps/ion 6 12 6\n")
             
         
