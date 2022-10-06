@@ -51,9 +51,9 @@ private:
   const static int nTypes = 4; //leptons, mesons, baryons, ions
   std::vector<int> pdg_limit = {100,1000,10000};
 
-  const static int nPixX  = 100;
-  const static int nPixY  = 100;
-  const static int nPixZ  = 100;
+  const static int nPixX  = 40;
+  const static int nPixY  = 400;
+  const static int nPixZ  = 40;
 
   int minX = -10;
   int minY = -100;
