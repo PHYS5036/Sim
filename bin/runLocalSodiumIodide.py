@@ -36,7 +36,7 @@ if(len(sys.argv)>=3):
         #---------------------
         # Run Gen code
         #---------------------
-        subprocess.run([simdir+"/SodiumIodide/GenerateSpectrum.C+("+simdir+sourcePropName+","+genName+","+nEvents)])
+        subprocess.run([simdir+"/SodiumIodide/GenerateSpectrum.C+("+simdir+sourcePropName+","+genName+","+nEvents+")"])
 
         '''
         #---------------------
