@@ -36,7 +36,7 @@ if(len(sys.argv)>=2):
         #---------------------
         # Run Gen code
         #---------------------
-        subprocess.run(["root",simdir+"/SodiumIodideMC/GenerateSpectrum.C+(\""+simdir+sourcePropName+"\",\""+genName+"\","+nEvents+")"])
+        subprocess.run(["root","-b","-q",simdir+"/SodiumIodideMC/GenerateSpectrum.C+(\""+simdir+sourcePropName+"\",\""+genName+"\","+nEvents+")"])
         
         
         #---------------------
@@ -57,7 +57,7 @@ if(len(sys.argv)>=2):
         #---------------------
         # Run Sim code
         #---------------------
-        subprocess.run(["SodiumIodideMC",macroName])
+        subprocess.run(["SodiumIodideMC","-b","-q",macroName])
 
         os.remove(macroName)
 
