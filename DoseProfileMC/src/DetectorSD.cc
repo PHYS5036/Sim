@@ -59,6 +59,8 @@ G4bool DetectorSD::ProcessHits( G4Step* aStep,G4TouchableHistory* )
   G4int                 id           = volume->GetCopyNo();
   G4String              ParticleName = aTrack->GetDefinition()->GetParticleName();
   G4double              edep         = aStep->GetTotalEnergyDeposit();
+
+  if(edep<=0) return false;
   
   DetectorHit* Hit = new DetectorHit;
   Hit->SetEnergy(edep);

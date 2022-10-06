@@ -197,7 +197,6 @@ void AnalysisManager::FillTree()
 
     if(x_i<0 || y_i<0 || z_i<0 ||x_i>=nPixX || y_i>=nPixY || z_i>=nPixZ) continue;;
 
-
     int pdg_i = 0;
     for(int limit : pdg_limit){
       if(fRAW_pdg[i]<limit)break;
