@@ -66,7 +66,7 @@ if(len(sys.argv)>=3):
         f.write("/gps/direction 0 -1 0\n")
         f.write("/gps/pos/type Plane\n")
         f.write("/gps/pos/shape Circle\n")
-        f.write("/gps/pos/radius 0.5 mm\n")
+        f.write("/gps/pos/radius 1 mm\n")
         f.write("/gps/pos/centre 0 1000 0 mm\n")
         f.write("/gps/pos/rot1 1 0 0\n")
         f.write("/gps/pos/rot2 0 0 1\n")
