@@ -97,12 +97,12 @@ if(len(sys.argv)>=3):
 
         
     else:
-        print('WARNING, wrong input: please re-run as eg ./runsim.py [beam type] [energy] [N events] [Tumour 0/1] [Hadronic 0/1]')
-        print('where [beam type] is either gamma, electron, proton or ion and [energy] is in MeV')
+        print('WARNING, wrong input: please re-run as eg ./runSodiumIodide.py [source] [N events]')
+        print('where [source] is either Cs137,Na22,Co60,Am241')
 
     
 else:
-    print('WARNING, wrong input: please re-run as eg ./runsim.py [beam type] [energy]')
-    print('where [beam type] is either gamma, electron, proton or ion and [energy] is in MeV')
-
+    print('WARNING, wrong input: please re-run as eg ./runSodiumIodide.py [source] [N events]')
+    print('where [source] is either Cs137,Na22,Co60,Am241')
+    
 
