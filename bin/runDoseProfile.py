@@ -77,10 +77,10 @@ if(len(sys.argv)>=3):
         #--------------------------
         # Run simulation
         #--------------------------
-        subprocess.run(["./DoseProfileMC",macroName])
+        subprocess.run(["DoseProfileMC",macroName])
 
 
-        #os.remove(macroName)
+        os.remove(macroName)
 
 
 
