@@ -44,7 +44,6 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
 
-  std::cout << "HI" << std::endl;
     fParticleSource->GeneratePrimaryVertex(anEvent);
 
     fVx          = fParticleSource->GetParticlePosition().getX();
@@ -57,8 +56,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
     fTp          = fParticleSource->GetParticleTime();
     fPDefinition = fParticleSource->GetParticleDefinition();
 
-    std::cout << fVx << " " << fPxp << " "  << std::endl;
-
+  
 }
 
 
