@@ -1,9 +1,7 @@
 #!/bin/bash
 
-export SIM_DIR=/local/cern/software/Sim
-
 cp -n ~/.bashrc ~/bashrc.orig
-cp $SIM_DIR/bashrc ~/.bashrc
+cp /local/cern/software/Sim/bashrc ~/.bashrc
 
 mkdir -p ~/data
 cd ~/data

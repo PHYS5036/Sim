@@ -11,5 +11,6 @@ source /local/cern/software/geant4/geant4.10.07.p02-install/bin/geant4.sh
 
 export PATH=/local/cern/software/Sim/bin/:$PATH:./:$ROOTSYS/bin
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:./:$ROOTSYS/lib
+export SIM_DIR=/local/cern/software/Sim
 
 alias l='ls -lhtr'
