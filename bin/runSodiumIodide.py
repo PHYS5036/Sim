@@ -40,6 +40,10 @@ if(len(sys.argv)>=2):
         # Make file names
         #---------------------
         sourcePropName = "/SodiumIodideMC/macros/"+sourceName+".txt"
+
+        if(absorberOn=="1"):
+            sourceName = sourceName + "_" + absorberMat + "_" + absorberThickness
+        
         genName = "Gen_"+sourceName+".root"
         simName = "G4_" +sourceName+".root"
         pdfName = "G4_" +sourceName+".pdf"
