@@ -12,6 +12,11 @@ sourceTypes = ["Cs137","Na22","Co60","Am241"]
 #nEvents
 nEvents = "250000"
 
+#Absorber
+absorberOn        = "0"
+absorberMat       = "G4_AIR"
+absorberThickness = "10.0"
+
 simdir = os.environ.get('SIM_DIR')
 
 #Check python arguments
@@ -21,6 +26,15 @@ if(len(sys.argv)>=2):
 
         if(len(sys.argv)>=3):
             nEvents = sys.argv[2]
+            
+        if(len(sys.argv)>=4):
+            absorberOn = sys.argv[3]
+            
+        if(len(sys.argv)>=5):
+            absorberMat = sys.argv[4]
+            
+        if(len(sys.argv)>=6):
+            absorberThickness = sys.argv[5]
         
         #---------------------
         # Make file names
@@ -43,9 +57,9 @@ if(len(sys.argv)>=2):
         # Write Macro file
         #---------------------
         f = open(macroName, "w")
-        f.write("/SodiumIodideMC/detector/AbsorberOn 0 \n")
-        f.write("/SodiumIodideMC/detector/AbsorberMaterial G4_AIR \n")
-        f.write("/SodiumIodideMC/detector/AbsorberThickness 10.0 \n")
+        f.write("/SodiumIodideMC/detector/AbsorberOn "+absorberOn+" \n")
+        f.write("/SodiumIodideMC/detector/AbsorberMaterial "+absorberMat+" \n")
+        f.write("/SodiumIodideMC/detector/AbsorberThickness "+absorberThickness+" \n")
         f.write("/SodiumIodideMC/physics/SetEmModel Standard \n")
         f.write("/SodiumIodideMC/physics/SetEmProcess All \n")
         f.write("/run/initialize \n")
@@ -74,12 +88,17 @@ if(len(sys.argv)>=2):
 
         
     else:
-        print('WARNING, wrong input: please re-run as eg ./runSodiumIodide.py [source] [N events]')
-        print('where [source] is either Cs137,Na22,Co60,Am241')
+        print('WARNING, wrong input: please re-run as eg ./runSodiumIodide.py [source] ([N events] [absorber 0/1] [absorber material] [asorber thickness]]')
+        print('Where [source] is either Cs137,Na22,Co60,Am241')
+        print('Arguments in () are optional')
+        print('Where [absorber material] can be taken from:')
+        print('https://geant4-userdoc.web.cern.ch/UsersGuides/ForApplicationDeveloper/html/Appendix/materialNames.html')
 
     
 else:
-    print('WARNING, wrong input: please re-run as eg ./runSodiumIodide.py [source] [N events]')
-    print('where [source] is either Cs137,Na22,Co60,Am241')
-    
+    print('WARNING, wrong input: please re-run as eg ./runSodiumIodide.py [source] ([N events] [absorber 0/1] [absorber material] [asorber thickness]]')
+    print('Where [source] is either Cs137,Na22,Co60,Am241')
+    print('Arguments in () are optional')
+    print('Where [absorber material] can be taken from:')
+    print('https://geant4-userdoc.web.cern.ch/UsersGuides/ForApplicationDeveloper/html/Appendix/materialNames.html')
 
