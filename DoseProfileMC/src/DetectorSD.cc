@@ -52,7 +52,6 @@ void DetectorSD::Initialize(G4HCofThisEvent* HCE)
 
 G4bool DetectorSD::ProcessHits( G4Step* aStep,G4TouchableHistory* )
 { 
-  G4cout << "HI" << G4endl;
   G4Track*              aTrack       = aStep->GetTrack();
   G4TouchableHistory*   theTouchable = (G4TouchableHistory*)(aStep->GetPreStepPoint()->GetTouchable());
   G4VPhysicalVolume*    volume       = theTouchable->GetVolume();
