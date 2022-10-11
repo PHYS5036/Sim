@@ -52,15 +52,17 @@ void DetectorSD::Initialize(G4HCofThisEvent* HCE)
 
 G4bool DetectorSD::ProcessHits( G4Step* aStep,G4TouchableHistory* )
 { 
-  
+  G4cout << "HI" << G4endl;
   G4Track*              aTrack       = aStep->GetTrack();
   G4TouchableHistory*   theTouchable = (G4TouchableHistory*)(aStep->GetPreStepPoint()->GetTouchable());
   G4VPhysicalVolume*    volume       = theTouchable->GetVolume();
   G4int                 id           = volume->GetCopyNo();
   G4String              ParticleName = aTrack->GetDefinition()->GetParticleName();
   G4double              edep         = aStep->GetTotalEnergyDeposit();
+  G4cout << edep << G4endl;
 
   if(edep<=0) return false;
+  G4cout << edep << G4endl;
   
   DetectorHit* Hit = new DetectorHit;
   Hit->SetEnergy(edep);

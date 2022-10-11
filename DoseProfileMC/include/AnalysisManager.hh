@@ -53,7 +53,7 @@ private:
 
   const static int nPixX  = 100;
   const static int nPixY  = 200;
-  const static int nPixZ  = 10;
+  const static int nPixZ  = 100;
 
   int minX = -50;
   int minY = -100;
