@@ -56,6 +56,7 @@ int main(int argc, char** argv)
       UI->ApplyCommand(command+fileName);
     }
 
+
   anaManager->WriteOutput();
 
   delete visManager;

@@ -47,7 +47,7 @@ void AnalysisManager::InitOutput()
       }
     }
   }
-  
+  primaryName = fPPDef->GetParticleName();
   
 }
 //---------------------------------------------------------------------------
@@ -61,14 +61,14 @@ void AnalysisManager::WriteOutput()
   std::cout << fOutFileName << std::endl;
 
   outfile << "nevent,particle,energy,xbins,xmin,xmax,ybins,ymin,ymax,zbins,zmin,zmax\n";
-  outfile << fEventN+1 << "," << fPPDef->GetParticleName() << "," << fPEne*1000 << "," << nPixX << "," << minX << ", "<< maxX << ", " << nPixY << "," << minY << ", "<< maxY << ", " << nPixZ << "," << minZ << ", "<< maxZ <<  "\n";
-
+  outfile << fEventN+1 << "," << primaryName << "," << fPEne*1000 << "," << nPixX << "," << minX << ", "<< maxX << ", " << nPixY << "," << minY << ", "<< maxY << ", " << nPixZ << "," << minZ << ", "<< maxZ <<  "\n";
   outfile << "x,y,z,lepton,leptonT,meson,mesonT,baryon,baryonT,ion,ionT\n";
 
+
   for(int i=0; i<nPixX; i++){
+
     for(int j=0; j<nPixY; j++){
       for(int k=0; k<nPixZ; k++){
-	
 	outfile << i << ", " << j << ", " << k;
 
 	for(int l=0; l<nTypes; l++){
@@ -96,7 +96,7 @@ void AnalysisManager::ZeroArray()
   fPth    = 9999;
   fPph    = 9999;
   fPTime  = 9999;
-  fPPDef  = NULL;
+  //fPPDef  = NULL;
   fPpdg   = 9999;
 
   // Raw Hits

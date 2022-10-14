@@ -28,8 +28,10 @@ EventAction::~EventAction()
 
 void EventAction::BeginOfEventAction(const G4Event* evt)
 { 
-  if( evt->GetEventID() == 0 )
+  if( evt->GetEventID() == 0 ){
+    fAnaManager->SetPrimaryPDef      ( (G4ParticleDefinition*)fPGA->GetPrimPDef() );
     fAnaManager->InitOutput();
+  }
 }
 
 //---------------------------------------------------------------------------

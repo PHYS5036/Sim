@@ -73,6 +73,7 @@ private:
   float                 fPph;
   float                 fPTime;
   G4ParticleDefinition* fPPDef;
+  G4String              primaryName;
   int                   fPpdg;
   G4ThreeVector         fPdir;
 
