@@ -29,9 +29,9 @@
 ##################################################################
 # Set input and output options
 ##################################################################
-
-/gps/particle   proton
-/gps/energy     100 MeV
+/DoseProfileMC/physics/addPhysics 0
+/gps/particle   ion
+/gps/energy     500 MeV
 /gps/direction  0 -1 0
 /gps/pos/type   Plane
 /gps/pos/shape  Circle
@@ -39,6 +39,7 @@
 /gps/pos/centre 0 1000 0 mm
 /gps/pos/rot1   1 0 0
 /gps/pos/rot2   0 0 1
+/gps/ion 6 12 6
 
 ##################################################################
 

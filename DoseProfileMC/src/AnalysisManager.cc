@@ -151,10 +151,11 @@ void AnalysisManager::FillArray( int hitn )
     fRAW_Edep[hitn]   = (float)fStepedep;
     fRAW_Energy[hitn] = sqrt( fRAW_mom[hitn]*fRAW_mom[hitn] 
 				     + fRAW_mass[hitn]*fRAW_mass[hitn] );
- 
-    fRAW_xpre[hitn]   = (fRAW_xpre[hitn] + fRAW_xpost[hitn])/2.;
-    fRAW_ypre[hitn]   = (fRAW_ypre[hitn] + fRAW_ypost[hitn])/2.;
-    fRAW_zpre[hitn]   = (fRAW_zpre[hitn] + fRAW_zpost[hitn])/2.;
+
+//     fRAW_xpre[hitn]   = (fRAW_xpre[hitn] + fRAW_xpost[hitn])/2.;
+//     fRAW_ypre[hitn]   = (fRAW_ypre[hitn] + fRAW_ypost[hitn])/2.;
+//     fRAW_zpre[hitn]   = (fRAW_zpre[hitn] + fRAW_zpost[hitn])/2.;
+
 
 }
 
@@ -171,16 +172,16 @@ void AnalysisManager::FillTree()
   
   for(int i=0; i<fRAW_Nhits; i++){
 
-    int x_i     = nPixX*(fRAW_xpre[i]-minX)/(maxX-minX);
-    int y_i     = nPixY*(fRAW_ypre[i]-minY)/(maxY-minY);
-    int z_i     = nPixZ*(fRAW_zpre[i]-minZ)/(maxZ-minZ);
+    int x_i     = floor(nPixX*((fRAW_xpost[i]-minX)/(maxX-minX)));
+    int y_i     = floor(nPixY*((fRAW_ypost[i]-minY)/(maxY-minY)));
+    int z_i     = floor(nPixZ*((fRAW_zpost[i]-minZ)/(maxZ-minZ)));
 
+    if(x_i<0 || y_i<0 || z_i<0 || x_i>=nPixX || y_i>=nPixY || z_i>=nPixZ) continue;
 
-    if(x_i<0 || y_i<0 || z_i<0 ||x_i>=nPixX || y_i>=nPixY || z_i>=nPixZ) continue;;
-
+   
     int pdg_i = 0;
     for(int limit : pdg_limit){
-      if(fRAW_pdg[i]<limit)break;
+      if(fRAW_pdg[i]<limit) break;
       pdg_i++;
     }
 

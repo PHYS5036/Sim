@@ -84,7 +84,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 						     "expHall_log", 0, 0, 0);
   
   fExpHall                     = new G4PVPlacement(0, G4ThreeVector(),
-						   expHall_log, "expHall", 0, false, 0);
+						   expHall_log, "expHall", 0, false, 2);
 
   //---------------------------------------------------------------------------
   // Create Water Phantom for Radiotherapy
