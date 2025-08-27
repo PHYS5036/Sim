@@ -1,0 +1,26 @@
+##################################################################
+# Set physics models and interactBEAM1 opitons
+##################################################################
+
+#/DoseProfileMC/physics/addPhysics standard_opt3
+/DoseProfileMC/physics/addPhysics QGSP_BIC_EMY
+/run/initialize
+
+
+##################################################################
+# Set input and output options
+##################################################################
+
+/gps/particle   proton
+/gps/energy     100 MeV
+/gps/direction  -1 0 0
+/gps/pos/type   Plane
+/gps/pos/shape  Circle
+/gps/pos/radius 1 mm
+/gps/pos/centre 0 100 0 mm
+/gps/pos/rot1   1 0 0
+/gps/pos/rot2   0 0 1
+
+##################################################################
+
+/run/beamOn 2500

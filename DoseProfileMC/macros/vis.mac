@@ -1,0 +1,47 @@
+##################################################################
+# Set physics models and interaction opitons
+##################################################################
+
+/DoseProfileMC/physics/addPhysics standard_opt3
+/run/initialize
+
+
+##################################################################
+# Set visualisation options
+##################################################################
+
+#/vis/open OGLIX
+/vis/open OGLSQt
+#/vis/scene/create
+#/vis/viewer/create OGLIX
+/vis/viewer/set/viewpointThetaPhi 70 20
+#/vis/viewer/set/style surface
+/vis/drawVolume
+/vis/scene/add/trajectories
+/vis/modeling/trajectories/create/drawByCharge
+/vis/scene/endOfEventAction accumulate
+
+# Re-establish auto refreshing and verbosity:
+/vis/viewer/flush
+/vis/viewer/set/autoRefresh true
+/vis/verbose warnings
+
+##################################################################
+# Set input and output options
+##################################################################
+/DoseProfileMC/physics/addPhysics 0
+/gps/particle   ion
+/gps/energy     500 MeV
+/gps/direction  0 -1 0
+/gps/pos/type   Plane
+/gps/pos/shape  Circle
+/gps/pos/radius 1 mm
+/gps/pos/centre 0 1000 0 mm
+/gps/pos/rot1   1 0 0
+/gps/pos/rot2   0 0 1
+/gps/ion 6 12 6
+
+##################################################################
+
+/run/beamOn 25
+

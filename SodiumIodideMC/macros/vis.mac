@@ -1,0 +1,38 @@
+##################################################################
+# Set electromagnetic model and interaction opitons
+##################################################################
+
+/SodiumIodideMC/physics/SetEmModel Standard
+/SodiumIodideMC/physics/SetEmProcess All
+/run/initialize
+
+##################################################################
+# Set input options
+##################################################################
+
+/SodiumIodideMC/generator/Mode 1
+/SodiumIodideMC/generator/InputFile ~/data/Gen_SOURCE1.root
+
+##################################################################
+# Set output options
+##################################################################
+
+/SodiumIodideMC/analysis/setOutputFile ~/data/Vis_SOURCE1.root
+
+##################################################################
+# Set visualisation options
+##################################################################
+
+/vis/scene/create
+/vis/open OGLIX
+/vis/viewer/set/viewpointThetaPhi 70 20
+/vis/scene/add/trajectories
+/vis/modeling/trajectories/create/drawByCharge
+/vis/scene/endOfEventAction accumulate
+/vis/viewer/select viewer-0
+/vis/viewer/rebuild
+
+##################################################################
+
+/run/beamOn 50
+
