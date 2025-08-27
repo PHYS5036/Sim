@@ -78,15 +78,15 @@ void EventAction::EndOfEventAction(const G4Event* evt)
 	}
     }
     
-    if( nfpd_phys != 0 ) {
-      // Fill output data from PrimaryGeneratorAction
-      fAnaManager->SetPrimaryDirection ( (G4ThreeVector)fPGA->GetDirection() );
-      fAnaManager->SetPrimaryEnergy    ( (G4double)fPGA->GetEnergy() );
-      fAnaManager->SetPrimaryTime      ( (G4double)fPGA->GetTime() );
-      fAnaManager->SetPrimaryPDef      ( (G4ParticleDefinition*)fPGA->GetPrimPDef() );
+    
+    // Fill output data from PrimaryGeneratorAction
+    fAnaManager->SetPrimaryDirection ( (G4ThreeVector)fPGA->GetDirection() );
+    fAnaManager->SetPrimaryEnergy    ( (G4double)fPGA->GetEnergy() );
+    fAnaManager->SetPrimaryTime      ( (G4double)fPGA->GetTime() );
+    fAnaManager->SetPrimaryPDef      ( (G4ParticleDefinition*)fPGA->GetPrimPDef() );
       
-      fAnaManager->FillTree(); 
-    }
+    fAnaManager->FillTree(); 
+    
   }
 
   fAnaManager->SetEventN(event_id);

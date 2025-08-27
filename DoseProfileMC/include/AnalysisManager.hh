@@ -8,6 +8,7 @@
 #include "G4ThreeVector.hh"
 #include "G4ParticleDefinition.hh"
 
+#include "CLHEP/Random/Random.h"
 
 //---------------------------------------------------------------------------
 
@@ -47,6 +48,8 @@ private:
   
   AnalysisMessenger*    fAnaMessenger;
   G4String              fOutFileName = "temp.csv";
+
+  CLHEP::HepRandom *fRand;
 
   const static int nTypes = 4; //leptons, mesons, baryons, ions
   std::vector<int> pdg_limit = {100,1000,10000};

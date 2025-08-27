@@ -27,9 +27,9 @@
 #include "G4ProcessManager.hh"
 #include "G4IonFluctuations.hh"
 #include "G4IonParametrisedLossModel.hh"
-#include "G4EmProcessOptions.hh"
+//#include "G4EmProcessOptions.hh"
 
-#include "G4PhotoNuclearProcess.hh"
+//#include "G4PhotoNuclearProcess.hh"
 #include "G4CascadeInterface.hh"
 
 //---------------------------------------------------------------------------

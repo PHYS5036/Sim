@@ -7,6 +7,7 @@
 #include "G4Point3D.hh"
 #include "G4Transform3D.hh"
 
+
 #include <iostream>
 #include <fstream>
 
@@ -19,6 +20,9 @@ AnalysisManager::AnalysisManager()
   fOutFileName = G4String("output/out_default.csv");
 
   fAnaMessenger = new AnalysisMessenger(this);
+
+  fRand = new CLHEP::HepRandom();
+
 }
 
 //---------------------------------------------------------------------------
@@ -172,10 +176,20 @@ void AnalysisManager::FillTree()
   
   for(int i=0; i<fRAW_Nhits; i++){
 
-    int x_i     = floor(nPixX*((fRAW_xpost[i]-minX)/(maxX-minX)));
-    int y_i     = floor(nPixY*((fRAW_ypost[i]-minY)/(maxY-minY)));
-    int z_i     = floor(nPixZ*((fRAW_zpost[i]-minZ)/(maxZ-minZ)));
-
+    //int x_i     = floor(nPixX*((fRAW_xpre[i]-minX)/(maxX-minX)));
+    //int y_i     = floor(nPixY*((fRAW_ypre[i]-minY)/(maxY-minY)));
+    //int z_i     = floor(nPixZ*((fRAW_zpre[i]-minZ)/(maxZ-minZ)));
+    //int x_i     = floor(nPixX*((fRAW_xpost[i]-minX)/(maxX-minX)));
+    //int y_i     = floor(nPixY*((fRAW_ypost[i]-minY)/(maxY-minY)));
+    //int z_i     = floor(nPixZ*((fRAW_zpost[i]-minZ)/(maxZ-minZ)));
+    //int x_i     = floor(nPixX*(((fRAW_xpost[i]+fRAW_xpre[i])/2-minX)/(maxX-minX)));
+    //int y_i     = floor(nPixY*(((fRAW_ypost[i]+fRAW_ypre[i])/2-minY)/(maxY-minY)));
+    //int z_i     = floor(nPixZ*(((fRAW_zpost[i]+fRAW_zpre[i])/2-minZ)/(maxZ-minZ)));
+    float rand  = fRand->flat(); 
+    int x_i     = floor(nPixX*(((fRAW_xpost[i]-fRAW_xpre[i])*rand+fRAW_xpre[i]-minX)/(maxX-minX)));
+    int y_i     = floor(nPixY*(((fRAW_ypost[i]-fRAW_ypre[i])*rand+fRAW_ypre[i]-minY)/(maxY-minY)));
+    int z_i     = floor(nPixZ*(((fRAW_zpost[i]-fRAW_zpre[i])*rand+fRAW_zpre[i]-minZ)/(maxZ-minZ)));
+    
     if(x_i<0 || y_i<0 || z_i<0 || x_i>=nPixX || y_i>=nPixY || z_i>=nPixZ) continue;
 
    
