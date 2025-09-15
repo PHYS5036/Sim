@@ -113,7 +113,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   
   // Define case dimensions
   G4Tubs* detcase_tubs = new G4Tubs("detcase_tubs",
-                                    0 *mm, 28*mm, 43.75 *mm, // inner radius (0 for solid), outer radius, half-length of cylinder
+                                    0 *mm, 14*mm, 43.75 *mm, // inner radius (0 for solid), outer radius, half-length of cylinder
                                     0. *deg, 360. *deg );    // starting phi, segment angle
   
   // Set logical volume for case (the material)
@@ -122,7 +122,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 						     "detcase_log", 0, 0, 0);
   
   // Set physical volume for case (the placement in the world: rotation, position)
-  fDetCase = new G4PVPlacement(0, G4ThreeVector(0.,-10. *mm, 28.45 *mm),
+  fDetCase = new G4PVPlacement(0, G4ThreeVector(0., 0. *mm, 15.00 *mm),
 						                  detcase_log, "detcase", expHall_log, false, 0);
 
     //---------------------------------------------------------------------------
@@ -130,33 +130,33 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     //---------------------------------------------------------------------------
 
     G4Tubs* airgap_tubs = new G4Tubs("airgap_tubs",
-            0. *cm, 24.0 *mm, 26.75 *mm,
+            0. *mm, 12.0 *mm, 26.75 *mm,
             0. *deg, 360. *deg);
 
     G4LogicalVolume* airgap_log = new G4LogicalVolume(airgap_tubs,
                   fNistManager->FindOrBuildMaterial("G4_AIR"),
                   "airgap_log", 0, 0, 0);
 
-    fGapVol = new G4PVPlacement(0, G4ThreeVector(15.*mm, 0., 14. *mm),
-              airgap_log, "airgap", detcase_log, false, 0); // placed inside detector case
+    fGapVol = new G4PVPlacement(0, G4ThreeVector(0., 0., 15. *mm),
+              airgap_log, "airgap", detcase_log, false, 0);
 
 
     //---------------------------------------------------------------------------
     // 2.3 Create and place GAGG Crystal
     //---------------------------------------------------------------------------
-    G4Box* det_box = new G4Box("det_box", // TODO: Change dimensions of GAGG crystal for new setup
+    G4Box* det_box = new G4Box("det_box",
                 6.75 *mm, 6.75 *mm, 10.10 *mm);
     
     G4LogicalVolume* det_log = new G4LogicalVolume(det_box,
               fNistManager->FindOrBuildMaterial("GAGG"),
               "det_log", 0, 0, 0);
     
-    fDetVol = new G4PVPlacement(0, G4ThreeVector(-31.65 *mm, 0., 14. *mm),
+    fDetVol = new G4PVPlacement(0, G4ThreeVector(0., 0., -31.65*mm),
                   det_log, "det", detcase_log, false, 0);
 
 
   //---------------------------------------------------------------------------
-  // Create Absorber Geometry - OUTDATED - TO BE UPDATED FOR NEW SETUP
+  // Create Absorber Geometry - LEGACY
   //---------------------------------------------------------------------------
 
   G4Tubs* hole_tubs;
@@ -183,13 +183,13 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     //---------------------------------------------------------------------------
     
     desk_box           = new G4Box("desk_box",
-				   0.3 *m, 10. *mm, 0.3 *m );
+				   .3 *m, 10. *mm, .3 *m );
     
     desk_log = new G4LogicalVolume(desk_box,
 				   wood,
 				   "desk_log", 0, 0, 0);
     
-    fDesk                     = new G4PVPlacement(0, G4ThreeVector(0., -60. *mm, 0.),
+    fDesk                     = new G4PVPlacement(0, G4ThreeVector(0., -55. *mm, 0.),
 						  desk_log, "desk", expHall_log, false, 0);
 
     //---------------------------------------------------------------------------
@@ -197,16 +197,16 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     //---------------------------------------------------------------------------
     
     lead_box           = new G4Box("lead_box",
-				   12 *mm, 40. *mm, 100 *mm );
+				   12.5 *mm, 50. *mm, 102.5 *mm );
     
     lead_log = new G4LogicalVolume(lead_box,
 				   fNistManager->FindOrBuildMaterial("G4_Pb"),
 				   "lead_log", 0, 0, 0);
     
-    fLead1                     = new G4PVPlacement(0, G4ThreeVector(70. *mm, -10. *mm, 30. *mm),
+    fLead1                     = new G4PVPlacement(0, G4ThreeVector(62. *mm, 0., -30. *mm),
 						   lead_log, "lead1", expHall_log, false, 0);
     
-    fLead2                     = new G4PVPlacement(0, G4ThreeVector(-70. *mm, -10. *mm, 30. *mm),
+    fLead2                     = new G4PVPlacement(0, G4ThreeVector(-62. *mm, 0., -30. *mm),
 						   lead_log, "lead2", expHall_log, false, 0);
 
     //---------------------------------------------------------------------------
@@ -214,13 +214,13 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     //---------------------------------------------------------------------------
     
     source_box          = new G4Box("source_box",
-				     50. *mm, 40. *mm, 25. *mm );
+				     47.5 *mm, 50. *mm, 25. *mm );
     
     source_log          = new G4LogicalVolume(source_box,
 				     fNistManager->FindOrBuildMaterial("G4_Pb"),
 				     "source_log", 0, 0, 0);
     
-    fSource             = new G4PVPlacement(0, G4ThreeVector(0. *mm, -10. *mm, -60. *mm),
+    fSource             = new G4PVPlacement(0, G4ThreeVector(0., 0., -60. *mm),
 					    source_log, "source", expHall_log, false, 0);
 
 
@@ -249,18 +249,38 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //---------------------------------------------------------------------------
   // Set Visulisation Attributes
   //---------------------------------------------------------------------------
-  
-  G4VisAttributes* red     = new G4VisAttributes( G4Colour(1.0,0.0,0.0)   );
-  G4VisAttributes* cyan    = new G4VisAttributes( G4Colour(0.0,1.0,1.0)   );
-  G4VisAttributes* green   = new G4VisAttributes( G4Colour(0.0,1.0,0.0)   );
-  G4VisAttributes* grey    = new G4VisAttributes( G4Colour(0.5, 0.5, 0.5) );
-
 
   expHall_log->SetVisAttributes(G4VisAttributes::GetInvisible());
-  det_log->SetVisAttributes(red);
-  detcase_log->SetVisAttributes(cyan);
-  source_log->SetVisAttributes(green);
+  // hole_log->SetVisAttributes(G4VisAttributes::GetInvisible());
+  airgap_log->SetVisAttributes(G4VisAttributes::GetInvisible());
+
+  G4VisAttributes* blue    = new G4VisAttributes( G4Colour::Blue() );
+  blue->SetForceSolid(true);
+  hole_log->SetVisAttributes(blue);
+  
+  G4VisAttributes* yellow     = new G4VisAttributes( G4Colour::Yellow()   );
+  yellow->SetForceSolid(true);
+  det_log->SetVisAttributes(yellow);
+
+  G4VisAttributes* red    = new G4VisAttributes( G4Colour(1.,0.,0.,0.55)   );
+  red->SetForceSolid(true);
+  // cyan->SetForceWireframe(true);
+  // cyan->SetLineWidth(5.);
+  detcase_log->SetVisAttributes(red);
+
+  G4VisAttributes* white   = new G4VisAttributes( G4Colour::White() );
+  white->SetForceSolid(true);
+  source_log->SetVisAttributes(white);
+  desk_log->SetVisAttributes(white);
+
+  G4VisAttributes* grey    = new G4VisAttributes( G4Colour(0.5, 0.5, 0.5,0.35) );
+  grey->SetForceSolid(true);
   lead_log->SetVisAttributes(grey);
+  source_log->SetVisAttributes(grey);
+
+  // G4VisAttributes* brown   = new G4VisAttributes( G4Colour(0.45,0.45,0.));
+  // brown->SetForceSolid(true);
+  // desk_log->SetVisAttributes(brown);
     
   return fExpHall;
 }

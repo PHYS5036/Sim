@@ -38,6 +38,10 @@ int main(int argc, char** argv)
   G4VisManager* visManager = 0;
 
   if (argc==1) {
+
+  // ----------------------------------------
+  // LEGACY CODE - W.O couldnt get it working, replaced with new code. Also updated vis.mac settings.
+
     // std::cout << "Interactive mode" << std::endl;
     // #ifdef G4VIS_USE
     //     std::cout << "Initialize visualization" << std::endl;
@@ -53,6 +57,8 @@ int main(int argc, char** argv)
     // #endif
     //     session->SessionStart();
     //     delete session;
+  // ----------------------------------------
+
 
     // Initialize the visualization
     G4VisManager* visManager = new G4VisExecutive();
@@ -70,9 +76,9 @@ int main(int argc, char** argv)
 
     std::cout << "Visualization macro executed." << std::endl;
 
-    runManager->BeamOn(1);
+    // runManager->BeamOn(1);
 
-    std::cout << "Beam on complete." << std::endl;
+    // std::cout << "Beam on complete." << std::endl;
 
     // Start the interactive session
     ui->SessionStart();
