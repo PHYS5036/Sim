@@ -57,22 +57,44 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4LogicalVolumeStore::GetInstance()->Clean();
   G4SolidStore::GetInstance()->Clean();
 
-  // wood
-  G4Element* H = new G4Element
-    ("Hydrogen", "H", 1., 1.00794*g/mole );
-  G4Element* O  = new G4Element
-    ("Oxygen", "O" , 8., 16.00*g/mole );
-  G4Element* C  = new G4Element
-    ("Carbon", "C", 6. , 12.011*g/mole);
+  //---------------------------------------------------------------------------
+  // Define Materials
+  //---------------------------------------------------------------------------
 
-  G4Material* wood = new G4Material
-    ("wood", 0.9*g/cm3, 3);
+  // Wood
+  G4Element* H = new G4Element("Hydrogen", "H", 1., 1.00794*g/mole );
+  G4Element* O  = new G4Element("Oxygen", "O" , 8., 16.00*g/mole );
+  G4Element* C  = new G4Element("Carbon", "C", 6. , 12.011*g/mole);
+
+  G4Material* wood = new G4Material("wood", 0.9*g/cm3, 3);
   wood->AddElement(H , 4);
   wood->AddElement(O , 1);
   wood->AddElement(C , 2);
 
+
+  // GAGG(Ce) - Gadolinium Aluminium Gallium Garnet (Gd₃Al₂Ga₃O₁₂)
+  G4Element* Gd = new G4Element("Gadolinium", "Gd", 64., 157.25*g/mole);
+  G4Element* Al = new G4Element("Aluminium", "Al", 13., 26.982*g/mole);
+  G4Element* Ga = new G4Element("Gallium", "Ga", 31., 69.723*g/mole);
+  G4Element* Ce = new G4Element("Cerium", "Ce", 58., 140.116*g/mole);
+
+  G4Material* GAGG = new G4Material("GAGG", 6.63*g/cm3, 5);
+  GAGG->AddElement(Ce, 1*perCent);
+  GAGG->AddElement(Gd, 50.*perCent);
+  GAGG->AddElement(Al, 6.*perCent);
+  GAGG->AddElement(Ga, 23.*perCent);
+  GAGG->AddElement(O, 20.*perCent);
+
+  // PLA+ (Polylactic Acid) - 3D printing material
+  //  (elemental breakdown is an approximation - can't find manufacturer source but used ratios from: https://doi.org/10.1016/j.apradiso.2023.110908 )
+  G4Material* PLA = new G4Material("PLA", 1.30*g/cm3, 3);
+  PLA->AddElement(C, 50.*perCent);
+  PLA->AddElement(O, 44.46*perCent);
+  PLA->AddElement(H, 5.54*perCent);
+
+
   //---------------------------------------------------------------------------
-  // Create Experimental Hall
+  // 1. Create Experimental Hall
   //---------------------------------------------------------------------------
 
   G4Box* expHall_box           = new G4Box("expHall_box",
@@ -86,73 +108,62 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 						   expHall_log, "expHall", 0, false, 0);
 
   //---------------------------------------------------------------------------
-  // Create Sodium Iodide Detector Aluminium Case
+  // 2.1 Create GAGG Detector Case -- Front part is solid with crystal, back part hollow with air void (where electronics go) 
   //---------------------------------------------------------------------------
-
-  G4Tubs* detcase_tubs        = new G4Tubs("detcase_tubs",
-					   0 *mm, 28.596 *mm, 28.45 *mm,
-					   0. *deg, 360. *deg );
   
+  // Define case dimensions
+  G4Tubs* detcase_tubs = new G4Tubs("detcase_tubs",
+                                    0 *mm, 28*mm, 43.75 *mm, // inner radius (0 for solid), outer radius, half-length of cylinder
+                                    0. *deg, 360. *deg );    // starting phi, segment angle
+  
+  // Set logical volume for case (the material)
   G4LogicalVolume* detcase_log = new G4LogicalVolume(detcase_tubs,
-						     fNistManager->FindOrBuildMaterial("G4_Al"),
+						     fNistManager->FindOrBuildMaterial("PLA"),
 						     "detcase_log", 0, 0, 0);
   
-  fDetCase                  = new G4PVPlacement(0, G4ThreeVector(0.,-10. *mm, 28.45 *mm),
-						detcase_log, "detcase", expHall_log, false, 0);
+  // Set physical volume for case (the placement in the world: rotation, position)
+  fDetCase = new G4PVPlacement(0, G4ThreeVector(0.,-10. *mm, 28.45 *mm),
+						                  detcase_log, "detcase", expHall_log, false, 0);
+
+    //---------------------------------------------------------------------------
+    // 2.2 Create and place air gap (where electronics sit) at back of detector
+    //---------------------------------------------------------------------------
+
+    G4Tubs* airgap_tubs = new G4Tubs("airgap_tubs",
+            0. *cm, 24.0 *mm, 26.75 *mm,
+            0. *deg, 360. *deg);
+
+    G4LogicalVolume* airgap_log = new G4LogicalVolume(airgap_tubs,
+                  fNistManager->FindOrBuildMaterial("G4_AIR"),
+                  "airgap_log", 0, 0, 0);
+
+    fGapVol = new G4PVPlacement(0, G4ThreeVector(15.*mm, 0., 14. *mm),
+              airgap_log, "airgap", detcase_log, false, 0); // placed inside detector case
+
+
+    //---------------------------------------------------------------------------
+    // 2.3 Create and place GAGG Crystal
+    //---------------------------------------------------------------------------
+    G4Box* det_box = new G4Box("det_box", // TODO: Change dimensions of GAGG crystal for new setup
+                6.75 *mm, 6.75 *mm, 10.10 *mm);
+    
+    G4LogicalVolume* det_log = new G4LogicalVolume(det_box,
+              fNistManager->FindOrBuildMaterial("GAGG"),
+              "det_log", 0, 0, 0);
+    
+    fDetVol = new G4PVPlacement(0, G4ThreeVector(-31.65 *mm, 0., 14. *mm),
+                  detcase_log, "det", detcase_log, false, 0);
+
 
   //---------------------------------------------------------------------------
-  //Create air gap between case and detector
-  //---------------------------------------------------------------------------
-
-  G4Tubs* airgap_tubs = new G4Tubs("airgap_tubs",
-				   0. *cm, 26.4 *mm, 26.4 *mm,
-				   0. *deg, 360. *deg);
-
-  G4LogicalVolume* airgap_log = new G4LogicalVolume(airgap_tubs,
-						    fNistManager->FindOrBuildMaterial("G4_AIR"),
-						    "airgap_log", 0, 0, 0);
-
-  fGapVol = new G4PVPlacement(0, G4ThreeVector(0., 0., 0. *mm),
-			      airgap_log, "airgap", detcase_log, false, 0);
-
-  //---------------------------------------------------------------------------
-  // Create Sodium Iodide Detector
-  //---------------------------------------------------------------------------
-
-  G4Tubs* det_tubs        = new G4Tubs("det_tubs",
-				       0. *cm, 25.4 *mm, 25.4 *mm,
-				       0. *deg, 360. *deg );
-  
-  G4LogicalVolume* det_log = new G4LogicalVolume(det_tubs,
-						 fNistManager->FindOrBuildMaterial("G4_SODIUM_IODIDE"),
-						 "det_log", 0, 0, 0);
-  
-  fDetVol                  = new G4PVPlacement(0, G4ThreeVector(0.,0.,0. *mm),
-					       det_log, "det", airgap_log, false, 0);
-
-  //---------------------------------------------------------------------------
-  // Create Dummy PMT and Base
-  //---------------------------------------------------------------------------
- 
-  G4Tubs* pmt_tubs        = new G4Tubs("pmt_tubs",
-					   0 *mm, 28.596 *mm, 70.0 *mm,
-					   0. *deg, 360. *deg );
-  
-  G4LogicalVolume* pmt_log = new G4LogicalVolume(pmt_tubs,
-						 fNistManager->FindOrBuildMaterial("G4_AIR"),
-						 "pmt_log", 0, 0, 0);
-  
-  fPmt                  = new G4PVPlacement(0, G4ThreeVector(0.,-10. *mm, (28.45+28.45+70) *mm),
-					    pmt_log, "pmt", expHall_log, false, 0);
-
-  //---------------------------------------------------------------------------
-  // Create Absorber Geometry
+  // Create Absorber Geometry - OUTDATED - TO BE UPDATED FOR NEW SETUP
   //---------------------------------------------------------------------------
 
   G4Tubs* hole_tubs;
   G4Box* abs_box, *lead_box, *source_box, *desk_box;
   G4LogicalVolume* abs_log, *lead_log, *source_log, *hole_log, *desk_log;
 
+  // Legacy code from OLD NAI setup - version for attenuation experiment tbc.
   if( fAbsorberOn == 1 ) {
 
     abs_box           = new G4Box("abs_box",
@@ -199,9 +210,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 						   lead_log, "lead2", expHall_log, false, 0);
 
     //---------------------------------------------------------------------------
-    // Create Source Holder
+    // Create Source Holder - Lead box with air hole for stick source
     //---------------------------------------------------------------------------
-
+    
     source_box          = new G4Box("source_box",
 				     50. *mm, 40. *mm, 25. *mm );
     
@@ -241,10 +252,15 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   
   G4VisAttributes* red     = new G4VisAttributes( G4Colour(1.0,0.0,0.0)   );
   G4VisAttributes* cyan    = new G4VisAttributes( G4Colour(0.0,1.0,1.0)   );
+  G4VisAttributes* green   = new G4VisAttributes( G4Colour(0.0,1.0,0.0)   );
+  G4VisAttributes* grey    = new G4VisAttributes( G4Colour(0.5, 0.5, 0.5) );
+
 
   expHall_log->SetVisAttributes(G4VisAttributes::GetInvisible());
   det_log->SetVisAttributes(red);
-  pmt_log->SetVisAttributes(cyan);
+  detcase_log->SetVisAttributes(cyan);
+  source_log->SetVisAttributes(green);
+  lead_log->SetVisAttributes(grey);
     
   return fExpHall;
 }

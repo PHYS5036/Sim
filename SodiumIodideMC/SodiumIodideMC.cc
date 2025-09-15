@@ -20,6 +20,7 @@
 int main(int argc, char** argv)
 {
 
+  std::cout << "### SodiumIodideMC: Application Start ###" << std::endl;
   G4RunManager*           runManager = new G4RunManager();
   PhysicsList*            phys       = new PhysicsList();
   runManager->SetUserInitialization(phys);
@@ -34,9 +35,10 @@ int main(int argc, char** argv)
   runManager->SetUserAction(pga);
   runManager->SetUserAction(event);
 
+  std::cout << "### SodiumIodideMC: UI Initialization Start ###" << std::endl;
   G4UImanager * UI         = G4UImanager::GetUIpointer();
   G4VisManager* visManager = 0;
-
+  std::cout << "### SodiumIodideMC: UI Initialization End ###" << std::endl;
   if (argc==1) {
 #ifdef G4VIS_USE
     visManager = new G4VisExecutive;

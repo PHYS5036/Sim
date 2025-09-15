@@ -1,0 +1,7 @@
+/home/williamo/Projects/PHYS5036_Sim/Sim/SodiumIodideMC/CMakeFiles/SodiumIodideMC.dir
+/home/williamo/Projects/PHYS5036_Sim/Sim/SodiumIodideMC/CMakeFiles/edit_cache.dir
+/home/williamo/Projects/PHYS5036_Sim/Sim/SodiumIodideMC/CMakeFiles/rebuild_cache.dir
+/home/williamo/Projects/PHYS5036_Sim/Sim/SodiumIodideMC/CMakeFiles/list_install_components.dir
+/home/williamo/Projects/PHYS5036_Sim/Sim/SodiumIodideMC/CMakeFiles/install.dir
+/home/williamo/Projects/PHYS5036_Sim/Sim/SodiumIodideMC/CMakeFiles/install/local.dir
+/home/williamo/Projects/PHYS5036_Sim/Sim/SodiumIodideMC/CMakeFiles/install/strip.dir
