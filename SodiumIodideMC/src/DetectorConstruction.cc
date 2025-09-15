@@ -152,7 +152,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
               "det_log", 0, 0, 0);
     
     fDetVol = new G4PVPlacement(0, G4ThreeVector(-31.65 *mm, 0., 14. *mm),
-                  detcase_log, "det", detcase_log, false, 0);
+                  det_log, "det", detcase_log, false, 0);
 
 
   //---------------------------------------------------------------------------
