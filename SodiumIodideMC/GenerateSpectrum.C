@@ -33,7 +33,7 @@ void GenerateSpectrum( const char* specname = "macros/SOURCE1.txt",
   //-----------------------------------------------------------------------------
 
   float     fVx = 0.0;         // x position of gamma source in cm
-  float     fVy = -1.0;         // y position of gamma source in cm
+  float     fVy = 0.0;         // y position of gamma source in cm
   float     fVz = -distance;   // z position of gamma source in cm
 
   float     fGammaPx;          // x component of gamma momentum in MeV

@@ -32,7 +32,9 @@ using namespace std;
 string home=getenv("HOME");
 void SmearSpectrum( string finname  = home+"/data/G4_SOURCE1.root", 
 		    float resconst = 3.3,
-		    float respower = -0.5 )
+		    float respower = -0.5)
+// Resolution parameters from fit to NaI data: resconst = 3.3, respower = -0.5
+// Resolution parameters from fit to GAGG data: resconst = ?, respower = -0.8
 {
 
   // -----------------------------------------------------------------------------
@@ -110,6 +112,7 @@ void SmearSpectrum( string finname  = home+"/data/G4_SOURCE1.root",
   hE->Draw();
   hE->GetYaxis()->SetTitle("Number of Counts");
   hE->GetXaxis()->SetTitle("Energy (keV)");
+  // hE->GetXaxis()->SetRangeUser(0, 100);  // Limit display to 0-100 keV
 
   string s1 = (string)finname;
   string outname = s1.substr(0, s1.find(".", 0));

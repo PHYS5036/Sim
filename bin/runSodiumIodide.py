@@ -54,8 +54,12 @@ if(len(sys.argv)>=2):
         #---------------------
         # Run Gen code
         #---------------------
+
+        print("simdir:", simdir)
+        print("sourcePropName:", sourcePropName)
+        print("genName:", genName)
+        print("nEvents:", nEvents)
         subprocess.run(["root","-b","-q",simdir+"/SodiumIodideMC/GenerateSpectrum.C+(\""+simdir+sourcePropName+"\",\""+genName+"\","+nEvents+")"])
-        
         
         #---------------------
         # Write Macro file
@@ -77,7 +81,8 @@ if(len(sys.argv)>=2):
         #---------------------
         # Run Sim code
         #---------------------
-        subprocess.run(["SodiumIodideMC",macroName])
+        subprocess.run(["./SodiumIodideMC", macroName]) # Just for local run
+        #subprocess.run(["SodiumIodideMC", macroName]) # For run on cluster
 
         os.remove(macroName)
 
@@ -88,8 +93,6 @@ if(len(sys.argv)>=2):
         
         os.remove(genName)
         os.remove(simName)
-        
-
         
     else:
         print('WARNING, wrong input: please re-run as eg ./runSodiumIodide.py [source] ([N events] [absorber 0/1] [absorber material] [asorber thickness]]')

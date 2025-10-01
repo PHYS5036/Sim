@@ -276,7 +276,6 @@ SodiumIodideMC: /geant4-v11.1.1/lib/libG4RayTracer.so
 SodiumIodideMC: /geant4-v11.1.1/lib/libG4VRML.so
 SodiumIodideMC: /geant4-v11.1.1/lib/libG4ToolsSG.so
 SodiumIodideMC: /geant4-v11.1.1/lib/libG4OpenGL.so
-SodiumIodideMC: /geant4-v11.1.1/lib/libG4visQt3D.so
 SodiumIodideMC: /geant4-v11.1.1/lib/libG4vis_management.so
 SodiumIodideMC: /geant4-v11.1.1/lib/libG4modeling.so
 SodiumIodideMC: /geant4-v11.1.1/lib/libG4interfaces.so
@@ -321,17 +320,6 @@ SodiumIodideMC: /usr/lib/x86_64-linux-gnu/libICE.so
 SodiumIodideMC: /usr/lib/x86_64-linux-gnu/libSM.so
 SodiumIodideMC: /usr/lib/x86_64-linux-gnu/libX11.so
 SodiumIodideMC: /usr/lib/x86_64-linux-gnu/libGL.so
-SodiumIodideMC: /usr/lib/x86_64-linux-gnu/libQt5OpenGL.so.5.15.3
-SodiumIodideMC: /usr/lib/x86_64-linux-gnu/libQt5PrintSupport.so.5.15.3
-SodiumIodideMC: /usr/lib/x86_64-linux-gnu/libQt5Widgets.so.5.15.3
-SodiumIodideMC: /usr/lib/x86_64-linux-gnu/libQt53DExtras.so.5.15.3
-SodiumIodideMC: /usr/lib/x86_64-linux-gnu/libQt53DInput.so.5.15.3
-SodiumIodideMC: /usr/lib/x86_64-linux-gnu/libQt53DLogic.so.5.15.3
-SodiumIodideMC: /usr/lib/x86_64-linux-gnu/libQt53DRender.so.5.15.3
-SodiumIodideMC: /usr/lib/x86_64-linux-gnu/libQt53DCore.so.5.15.3
-SodiumIodideMC: /usr/lib/x86_64-linux-gnu/libQt5Gui.so.5.15.3
-SodiumIodideMC: /usr/lib/x86_64-linux-gnu/libQt5Network.so.5.15.3
-SodiumIodideMC: /usr/lib/x86_64-linux-gnu/libQt5Core.so.5.15.3
 SodiumIodideMC: /usr/lib/x86_64-linux-gnu/libxerces-c.so
 SodiumIodideMC: /geant4-v11.1.1/lib/libG4analysis.so
 SodiumIodideMC: /usr/lib/x86_64-linux-gnu/libexpat.so

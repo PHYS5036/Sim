@@ -101,11 +101,9 @@ int main(int argc, char** argv)
         sprintf( snev, "%d",nev );
         UI->ApplyCommand(commandr+snev);
     }
+    delete anaManager;
+    delete runManager;
   }
-
-  if(visManager) delete visManager;
-  delete anaManager;
-  delete runManager;
   
   return 0;
 }

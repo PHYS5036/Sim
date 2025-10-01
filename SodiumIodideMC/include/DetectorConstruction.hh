@@ -27,16 +27,21 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   inline G4VPhysicalVolume* GetDetVol()     { return fDetVol;   };
   inline DetectorSD*        GetDetSD()      { return fDetSD;    };
 
+  inline void SetDetectorType     ( G4int type )     { fDetectorType     = type; }
+  inline void SetDetectorDistance ( G4double dist )  { fDetectorDistance = dist; }
+
   inline void SetAbsorberOn        ( G4int    abson )  { fAbsorberOn       = abson; }
   inline void SetAbsorberMaterial  ( G4String mname )  { fAbsorberMaterial = mname; }
   inline void SetAbsorberThickness ( G4double thick )  { fAbsorberThick    = thick; }
 
   private:
 
+  // Init members
   G4NistManager*     fNistManager;
   DetectorMessenger* fDetMessenger;
   PrimaryGeneratorAction* fPGA;
 
+  // Physical Volumes
   G4VPhysicalVolume* fExpHall;
   G4VPhysicalVolume* fDesk;
   G4VPhysicalVolume* fDetVol;
@@ -44,12 +49,19 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   G4VPhysicalVolume* fDetCase;
   G4VPhysicalVolume* fGapVol;
   G4VPhysicalVolume* fPmt;
+  G4VPhysicalVolume* fSource;
+  G4VPhysicalVolume* fShield;
+
   G4VPhysicalVolume* fLead1;
   G4VPhysicalVolume* fLead2;
-  G4VPhysicalVolume* fSource;
-  G4VPhysicalVolume* fHole;
+  G4VPhysicalVolume* fLead3;
+  G4VPhysicalVolume* fLead4;
+  G4VPhysicalVolume* fLead5;
 
   DetectorSD*        fDetSD;
+
+  G4int              fDetectorType;
+  G4double           fDetectorDistance;
 
   G4int              fAbsorberOn;
   G4String           fAbsorberMaterial;

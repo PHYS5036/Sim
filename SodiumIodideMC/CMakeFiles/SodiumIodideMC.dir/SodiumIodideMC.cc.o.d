@@ -727,10 +727,5 @@ CMakeFiles/SodiumIodideMC.dir/SodiumIodideMC.cc.o: \
  /geant4-v11.1.1/include/Geant4/G4ToolsSGOffscreen.hh \
  /geant4-v11.1.1/include/Geant4/G4OpenGLImmediateX.hh \
  /geant4-v11.1.1/include/Geant4/G4OpenGLStoredX.hh \
- /geant4-v11.1.1/include/Geant4/G4OpenGLImmediateQt.hh \
- /geant4-v11.1.1/include/Geant4/G4OpenGLQt.hh \
- /geant4-v11.1.1/include/Geant4/G4OpenGLStoredQt.hh \
  /geant4-v11.1.1/include/Geant4/G4RayTracerX.hh \
- /geant4-v11.1.1/include/Geant4/G4Qt3D.hh \
- /geant4-v11.1.1/include/Geant4/G4ToolsSGX11GLES.hh \
- /geant4-v11.1.1/include/Geant4/G4ToolsSGQtGLES.hh
+ /geant4-v11.1.1/include/Geant4/G4ToolsSGX11GLES.hh
