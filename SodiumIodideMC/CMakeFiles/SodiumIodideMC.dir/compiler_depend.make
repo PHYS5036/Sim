@@ -834,13 +834,8 @@ CMakeFiles/SodiumIodideMC.dir/SodiumIodideMC.cc.o: SodiumIodideMC.cc \
   /geant4-v11.1.1/include/Geant4/G4ToolsSGOffscreen.hh \
   /geant4-v11.1.1/include/Geant4/G4OpenGLImmediateX.hh \
   /geant4-v11.1.1/include/Geant4/G4OpenGLStoredX.hh \
-  /geant4-v11.1.1/include/Geant4/G4OpenGLImmediateQt.hh \
-  /geant4-v11.1.1/include/Geant4/G4OpenGLQt.hh \
-  /geant4-v11.1.1/include/Geant4/G4OpenGLStoredQt.hh \
   /geant4-v11.1.1/include/Geant4/G4RayTracerX.hh \
-  /geant4-v11.1.1/include/Geant4/G4Qt3D.hh \
-  /geant4-v11.1.1/include/Geant4/G4ToolsSGX11GLES.hh \
-  /geant4-v11.1.1/include/Geant4/G4ToolsSGQtGLES.hh
+  /geant4-v11.1.1/include/Geant4/G4ToolsSGX11GLES.hh
 
 CMakeFiles/SodiumIodideMC.dir/src/AnalysisManager.cc.o: src/AnalysisManager.cc \
   /usr/include/stdc-predef.h \
@@ -6987,16 +6982,6 @@ include/PrimaryGeneratorMessenger.hh:
 
 /geant4-v11.1.1/include/Geant4/G4SPSAngDistribution.hh:
 
-/geant4-v11.1.1/include/Geant4/G4DataInterpolation.hh:
-
-/geant4-v11.1.1/include/Geant4/G4SPSRandomGenerator.hh:
-
-/geant4-v11.1.1/include/Geant4/G4SPSPosDistribution.hh:
-
-/geant4-v11.1.1/include/Geant4/G4VPrimaryGenerator.hh:
-
-/geant4-v11.1.1/include/Geant4/G4SingleParticleSource.hh:
-
 /geant4-v11.1.1/include/Geant4/G4ProcessManager.icc:
 
 /usr/include/c++/11/ratio:
@@ -7093,6 +7078,8 @@ include/PrimaryGeneratorMessenger.hh:
 
 /geant4-v11.1.1/include/Geant4/CLHEP/Random/RandBreitWigner.icc:
 
+/geant4-v11.1.1/include/Geant4/G4VPrimaryGenerator.hh:
+
 /geant4-v11.1.1/include/Geant4/G4Trap.icc:
 
 /geant4-v11.1.1/include/Geant4/CLHEP/Utility/thread_local.h:
@@ -7116,6 +7103,8 @@ include/PrimaryGeneratorMessenger.hh:
 /geant4-v11.1.1/include/Geant4/G4VEnergyLossProcess.hh:
 
 /geant4-v11.1.1/include/Geant4/G4ParticleTable.hh:
+
+/geant4-v11.1.1/include/Geant4/G4SingleParticleSource.hh:
 
 /geant4-v11.1.1/include/Geant4/G4StepPoint.icc:
 
@@ -7841,8 +7830,6 @@ SodiumIodideMC.cc:
 
 /usr/include/x86_64-linux-gnu/bits/iscanonical.h:
 
-/geant4-v11.1.1/include/Geant4/G4OpenGLQt.hh:
-
 /geant4-v11.1.1/include/Geant4/CLHEP/Random/RandBit.icc:
 
 /geant4-v11.1.1/include/Geant4/G4SmartVoxelProxy.icc:
@@ -8199,9 +8186,9 @@ src/DetectorMessenger.cc:
 
 /usr/include/c++/11/bits/stl_heap.h:
 
-/geant4-v11.1.1/include/Geant4/G4Qt3D.hh:
-
 /geant4-v11.1.1/include/Geant4/G4NavigationHistory.icc:
+
+/geant4-v11.1.1/include/Geant4/G4SPSPosDistribution.hh:
 
 /geant4-v11.1.1/include/Geant4/CLHEP/Random/MixMaxRng.h:
 
@@ -8823,12 +8810,6 @@ include/AnalysisMessenger.hh:
 
 /geant4-v11.1.1/include/Geant4/G4OpenGLStoredX.hh:
 
-/geant4-v11.1.1/include/Geant4/G4OpenGLImmediateQt.hh:
-
-/geant4-v11.1.1/include/Geant4/G4OpenGLStoredQt.hh:
-
-/geant4-v11.1.1/include/Geant4/G4ToolsSGQtGLES.hh:
-
 src/AnalysisManager.cc:
 
 /usr/include/c++/11/bits/std_thread.h:
@@ -9218,3 +9199,7 @@ include/PrimaryGeneratorAction.hh:
 /geant4-v11.1.1/include/Geant4/G4ParticleChangeForDecay.hh:
 
 src/PrimaryGeneratorAction.cc:
+
+/geant4-v11.1.1/include/Geant4/G4SPSRandomGenerator.hh:
+
+/geant4-v11.1.1/include/Geant4/G4DataInterpolation.hh:

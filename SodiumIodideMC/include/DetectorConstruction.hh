@@ -29,6 +29,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
 
   inline void SetDetectorType     ( G4int type )     { fDetectorType     = type; }
   inline void SetDetectorDistance ( G4double dist )  { fDetectorDistance = dist; }
+  inline void SetSourceHolderType ( G4int type )     { fSourceHolderType = type; }
 
   inline void SetAbsorberOn        ( G4int    abson )  { fAbsorberOn       = abson; }
   inline void SetAbsorberMaterial  ( G4String mname )  { fAbsorberMaterial = mname; }
@@ -44,11 +45,14 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   // Physical Volumes
   G4VPhysicalVolume* fExpHall;
   G4VPhysicalVolume* fDesk;
-  G4VPhysicalVolume* fDetVol;
+
   G4VPhysicalVolume* fAbsorber;
+
   G4VPhysicalVolume* fDetCase;
   G4VPhysicalVolume* fGapVol;
+  G4VPhysicalVolume* fDetVol;
   G4VPhysicalVolume* fPmt;
+
   G4VPhysicalVolume* fSource;
   G4VPhysicalVolume* fShield;
 
@@ -58,10 +62,13 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   G4VPhysicalVolume* fLead4;
   G4VPhysicalVolume* fLead5;
 
+  // Sensitive Detectors
   DetectorSD*        fDetSD;
 
+  // Configuration parameters
   G4int              fDetectorType;
   G4double           fDetectorDistance;
+  G4int              fSourceHolderType;
 
   G4int              fAbsorberOn;
   G4String           fAbsorberMaterial;

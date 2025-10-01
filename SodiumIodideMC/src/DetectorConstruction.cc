@@ -28,29 +28,31 @@ using namespace CLHEP;
 
 //---------------------------------------------------------------------------
 
-DetectorConstruction::DetectorConstruction( PrimaryGeneratorAction* pga,int commandLength )
-{
+DetectorConstruction::DetectorConstruction( PrimaryGeneratorAction* pga,int commandLength ) {
   fPGA = pga;
   fDetMessenger = new DetectorMessenger(this);
-
   fNistManager  = G4NistManager::Instance();
+
+  fSourceHolderType = 0; // New 3D printed source holder, default
+  fDetectorType   = 1;   // Sodium Iodide Detector, default
+  fDetectorDistance = 50. *mm; // Distance from source to detector front face
 
   if(commandLength==1){
     G4UImanager* UI = G4UImanager::GetUIpointer();
     G4String command = "/control/execute macros/DetectorSetup.mac";
     UI->ApplyCommand(command);
   }
+
 }
 
 //---------------------------------------------------------------------------
 
-DetectorConstruction::~DetectorConstruction() 
-{}
+DetectorConstruction::~DetectorConstruction() {
+}
 
 //---------------------------------------------------------------------------
 
-G4VPhysicalVolume* DetectorConstruction::Construct()
-{ 
+G4VPhysicalVolume* DetectorConstruction::Construct() { 
 
   G4GeometryManager::GetInstance()->OpenGeometry();
   G4PhysicalVolumeStore::GetInstance()->Clean();
@@ -111,23 +113,38 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // 2. Create Detector
   //---------------------------------------------------------------------------
   
+  G4LogicalVolume* det_log;
+  G4LogicalVolume* detcase_log;
+
+  G4double holder_offset;
+  if (fSourceHolderType == 0) {
+    holder_offset = 12. *mm; // New 3D printed source holder
+  } else if (fSourceHolderType == 1) {
+    holder_offset = 2 *mm; // Old pencil source holder
+  }
+  G4double det_length;
+  G4double det_offset;
+
   if (fDetectorType == 0) {
     //---------------------------------------------------------------------------
     // 2.1.0 Create GAGG Detector Case -- Front part is solid with crystal, back part hollow with air void (where electronics go) 
     //---------------------------------------------------------------------------
 
     // Define case dimensions
+    det_length = 87.5 *mm; // total length of case
+    det_offset = holder_offset + fDetectorDistance + det_length/2; // distance from source origin to centre of detector case
+
     G4Tubs* detcase_tubs = new G4Tubs("detcase_tubs",
-                                      0 *mm, 14*mm, 43.75 *mm, // inner radius (0 for solid), outer radius, half-length of cylinder
+                                      0 *mm, 14*mm, det_length/2, // inner radius (0 for solid), outer radius, half-length of cylinder
                                       0. *deg, 360. *deg );    // starting phi, segment angle
     
     // Set logical volume for case (the material)
-    G4LogicalVolume* detcase_log = new G4LogicalVolume(detcase_tubs,
+    detcase_log = new G4LogicalVolume(detcase_tubs,
                   fNistManager->FindOrBuildMaterial("PLA"),
                   "detcase_log", 0, 0, 0);
     
     // Set physical volume for case (the placement in the world: rotation, position)
-    fDetCase = new G4PVPlacement(0, G4ThreeVector(0., 0. *mm, 15.00 *mm),
+    fDetCase = new G4PVPlacement(0, G4ThreeVector(0., 0. *mm, det_offset),
                                 detcase_log, "detcase", expHall_log, false, 0);
 
     //---------------------------------------------------------------------------
@@ -152,7 +169,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     G4Box* det_box = new G4Box("det_box",
                 6.75 *mm, 6.75 *mm, 10.10 *mm);
     
-    G4LogicalVolume* det_log = new G4LogicalVolume(det_box,
+    det_log = new G4LogicalVolume(det_box,
               fNistManager->FindOrBuildMaterial("GAGG"),
               "det_log", 0, 0, 0);
     
@@ -164,16 +181,12 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     // 2.2.0 Create Sodium Iodide Detector Aluminium Case
     //---------------------------------------------------------------------------
 
-    G4Tubs* detcase_tubs        = new G4Tubs("detcase_tubs",
-      0 *mm, 28.596 *mm, 28.45 *mm,
-      0. *deg, 360. *deg );
+    det_length = 56.9 *mm; // total length of case
+    det_offset = holder_offset + fDetectorDistance + det_length/2; // distance from source origin to centre of detector case
 
-    G4LogicalVolume* detcase_log = new G4LogicalVolume(detcase_tubs,
-            fNistManager->FindOrBuildMaterial("G4_Al"),
-            "detcase_log", 0, 0, 0);
-
-    fDetCase                  = new G4PVPlacement(0, G4ThreeVector(0.,-10. *mm, 28.45 *mm),
-      detcase_log, "detcase", expHall_log, false, 0);
+    G4Tubs* detcase_tubs = new G4Tubs("detcase_tubs", 0 *mm, 28.596 *mm, det_length/2, 0. *deg, 360. *deg );
+    detcase_log          = new G4LogicalVolume(detcase_tubs, fNistManager->FindOrBuildMaterial("G4_Al"), "detcase_log", 0, 0, 0);
+    fDetCase             = new G4PVPlacement(0, G4ThreeVector(0.,-10. *mm, det_offset), detcase_log, "detcase", expHall_log, false, 0);
 
     //---------------------------------------------------------------------------
     // 2.2.1 Create air gap between detector case and detector
@@ -198,7 +211,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
       0. *cm, 25.4 *mm, 25.4 *mm,
       0. *deg, 360. *deg );
 
-    G4LogicalVolume* det_log = new G4LogicalVolume(det_tubs,
+    det_log = new G4LogicalVolume(det_tubs,
       fNistManager->FindOrBuildMaterial("G4_SODIUM_IODIDE"),
       "det_log", 0, 0, 0);
 
@@ -230,7 +243,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // 3. Create Source Holder 
   //---------------------------------------------------------------------------
     
-  if (fSourceHolder == 0) {
+  if (fSourceHolderType == 0) {
 
     //---------------------------------------------------------------------------
     // 3.1 Create New Source Holder (3D printed plastic with lead lining)
@@ -247,20 +260,20 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     fShield = new G4PVPlacement(0, G4ThreeVector(0., 0., -5. *mm), lead_lining_log, "lead_lining", plastic_holder_log, false, 0);
 
 
-  } else if (fSourceHolder == 1) {
+  } else if (fSourceHolderType == 1) {
 
     //---------------------------------------------------------------------------
-    // 3.2 Create Old Pencil Source Holder (lead block with hole)
+    // 3.2 Create Old Pencil Source Holder (lead block with hole) -- LEGACY
     //---------------------------------------------------------------------------
 
     // Lead Block
-    LeadShield_box = new G4Box("LeadShield_box", 47.5 *mm, 50. *mm, 25. *mm );
-    LeadShield_log = new G4LogicalVolume(LeadShield_box, fNistManager->FindOrBuildMaterial("G4_Pb"), "LeadShield", 0, 0, 0);
-    fShield        = new G4PVPlacement(0, G4ThreeVector(0., 0., -60. *mm), LeadShield_log, "source", expHall_log, false, 0);
+    G4Box* LeadShield_box = new G4Box("LeadShield_box", 47.5 *mm, 50. *mm, 25. *mm );
+    G4LogicalVolume* LeadShield_log = new G4LogicalVolume(LeadShield_box, fNistManager->FindOrBuildMaterial("G4_Pb"), "LeadShield", 0, 0, 0);
+    fShield = new G4PVPlacement(0, G4ThreeVector(0., 0., -60. *mm), LeadShield_log, "source", expHall_log, false, 0);
 
     // Add hole for source
-    source_tubs    = new G4Tubs("source_tubs", 0. *mm, 8. *mm, 25. *mm, 0. *deg, 360. *deg);
-    source_log     = new G4LogicalVolume(source_tubs, fNistManager->FindOrBuildMaterial("G4_AIR"), "source_log", 0, 0, 0);
+    G4Tubs* source_tubs    = new G4Tubs("source_tubs", 0. *mm, 8. *mm, 25. *mm, 0. *deg, 360. *deg);
+    G4LogicalVolume* source_log     = new G4LogicalVolume(source_tubs, fNistManager->FindOrBuildMaterial("G4_AIR"), "source_log", 0, 0, 0);
     fSource        = new G4PVPlacement(0, G4ThreeVector(0. *mm, 0. *mm, 0. *mm), source_log, "source", LeadShield_log, false, 0);
   
   }
@@ -335,7 +348,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   expHall_log->SetVisAttributes(G4VisAttributes::GetInvisible());
   // hole_log->SetVisAttributes(G4VisAttributes::GetInvisible());
-  airgap_log->SetVisAttributes(G4VisAttributes::GetInvisible());
+  // airgap_log->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   G4VisAttributes* blue    = new G4VisAttributes( G4Colour::Blue() );
   blue->SetForceSolid(true);
