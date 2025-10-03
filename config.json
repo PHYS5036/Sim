@@ -1,6 +1,6 @@
 {
-    "sourceName": "Am241",
-    // "nEvents": "250000",
+    "sourceName": "Na22",
+    "nEvents": "250000",
 
     "detectorType": "0",
     "sourceHolderType": "0",

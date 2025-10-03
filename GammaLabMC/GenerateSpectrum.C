@@ -25,7 +25,8 @@ using namespace std;
 void GenerateSpectrum( const char* specname = "macros/SOURCE1.txt", 
 		       const char* outname  = "~/data/Gen_SOURCE1.root",
 		       int   nevents  = 250000, 
-		       float distance = 0.0 )
+		       float distance = 0.0 
+           bool attenuation_experiment = false)
 {
 
   //  -----------------------------------------------------------------------------
@@ -95,6 +96,10 @@ void GenerateSpectrum( const char* specname = "macros/SOURCE1.txt",
     
     // Randomly generate angular distributions (in polar coordinates)
     float ph1     = fRand->Uniform( -TMath::Pi(), TMath::Pi() );
+    
+    // Want to boost statistics for attenuation experiment
+    
+
     float costh  = fRand->Uniform( -1, 1 ); 
     float th     = TMath::ACos( costh );
 
