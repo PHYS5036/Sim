@@ -1,0 +1,6 @@
+/GammaLabMC/detector/AbsorberOn 0
+/GammaLabMC/detector/AbsorberMaterial G4_Pb
+/GammaLabMC/detector/AbsorberThickness 30.0
+/GammaLabMC/detector/DetectorType 1
+/GammaLabMC/detector/SourceHolderType 0
+/GammaLabMC/detector/DetectorDistance 200

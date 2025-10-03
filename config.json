@@ -1,0 +1,15 @@
+{
+    "sourceName": "Am241",
+    // "nEvents": "250000",
+
+    "detectorType": "0",
+    "sourceHolderType": "0",
+    "detectorHolderDistance": "50",
+
+    "absorberOn": "0",
+    "absorberMat": "G4_Pb",
+    "absorberThickness": "10.0",
+    
+    "resconst": "3.3",
+    "respower": "-0.5"
+}
