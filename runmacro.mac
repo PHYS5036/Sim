@@ -8,5 +8,5 @@
 /GammaLabMC/physics/SetEmProcess All 
 /run/initialize 
 /GammaLabMC/generator/Mode 1 
-/GammaLabMC/generator/InputFile Gen_Na22.root 
-/GammaLabMC/analysis/setOutputFile G4_Na22.root 
+/GammaLabMC/generator/InputFile Gen_GAGG_Cs137.root 
+/GammaLabMC/analysis/setOutputFile G4_GAGG_Cs137.root 

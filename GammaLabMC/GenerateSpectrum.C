@@ -25,8 +25,7 @@ using namespace std;
 void GenerateSpectrum( const char* specname = "macros/SOURCE1.txt", 
 		       const char* outname  = "~/data/Gen_SOURCE1.root",
 		       int   nevents  = 250000, 
-		       float distance = 0.0 
-           bool attenuation_experiment = false)
+		       float distance = 0.0)
 {
 
   //  -----------------------------------------------------------------------------
@@ -98,7 +97,7 @@ void GenerateSpectrum( const char* specname = "macros/SOURCE1.txt",
     float ph1     = fRand->Uniform( -TMath::Pi(), TMath::Pi() );
     
     // Want to boost statistics for attenuation experiment
-    
+  
 
     float costh  = fRand->Uniform( -1, 1 ); 
     float th     = TMath::ACos( costh );

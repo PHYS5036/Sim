@@ -1,3 +1,13 @@
 .vscode/*
 SodiumIodideMC/install
 SodiumIodideMC/src/.ipynb_checkpoints
+*.spe
+*.pdf
+*.d
+*.so
+*.root
+*.pcm
+*Makefile
+**/CMakeFiles
+CMakeCache.txt
+cmake_install.cmake

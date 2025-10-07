@@ -85,11 +85,20 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
   G4VisAttributes* red    = new G4VisAttributes( G4Colour(1.,0.,0.,0.55)   );
   red->SetForceSolid(true);
 
-  G4VisAttributes* green    = new G4VisAttributes( G4Colour::Green() );
-  green->SetForceSolid(true);
-
   G4VisAttributes* blue    = new G4VisAttributes( G4Colour(0.,0.,1.,0.5) );
   blue->SetForceSolid(true);
+
+  G4VisAttributes* cyan = new G4VisAttributes( G4Colour(0., 1., 1., 0.5) );
+  cyan->SetForceSolid(true);
+
+  G4VisAttributes* grey    = new G4VisAttributes( G4Colour(0.5, 0.5, 0.5,0.35) );
+  grey->SetForceSolid(true);
+
+  G4VisAttributes* brown   = new G4VisAttributes( G4Colour(0.45,0.45,0.));
+  brown->SetForceSolid(true);
+
+  G4VisAttributes* green    = new G4VisAttributes( G4Colour::Green() );
+  green->SetForceSolid(true);
 
   G4VisAttributes* yellow     = new G4VisAttributes(G4Colour::Yellow());
   yellow->SetForceSolid(true);
@@ -100,11 +109,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
   G4VisAttributes* magenta = new G4VisAttributes( G4Colour::Magenta() );
   magenta->SetForceSolid(true);
 
-  G4VisAttributes* grey    = new G4VisAttributes( G4Colour(0.5, 0.5, 0.5,0.35) );
-  grey->SetForceSolid(true);
-
-  G4VisAttributes* brown   = new G4VisAttributes( G4Colour(0.45,0.45,0.));
-  brown->SetForceSolid(true);
 
   //---------------------------------------------------------------------------
   // Define Materials
@@ -240,6 +244,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
     G4Tubs* pmt_tubs = new G4Tubs("pmt_tubs", 0 *mm, 28.596 *mm, 70.0 *mm, 0. *deg, 360. *deg );
     pmt_log = new G4LogicalVolume(pmt_tubs, fNistManager->FindOrBuildMaterial("G4_AIR"), "pmt_log", 0, 0, 0);
     fPmt = new G4PVPlacement(0, G4ThreeVector(0.,0., (det_offset+det_length/2+70) *mm), pmt_log, "pmt", expHall_log, false, 0);
+    pmt_log->SetVisAttributes(cyan);
 
   } else {
     G4cout << "Detector type not recognised - no detector constructed" << G4endl
@@ -262,7 +267,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
     G4Tubs* plastic_holder_tubs = new G4Tubs("plastic_holder_tubs", 17.915 *mm, 18.915 *mm, 55. *mm, 0. *deg, 360. *deg);
     source_log = new G4LogicalVolume(plastic_holder_tubs, fNistManager->FindOrBuildMaterial("PLA"), "source_log", 0, 0, 0);
     fSource = new G4PVPlacement(0, G4ThreeVector(0., 0., -43. *mm), source_log, "plastic_holder", expHall_log, false, 0);
-    source_log->SetVisAttributes(red);
+    source_log->SetVisAttributes(blue);
     
     // Add lead lining
     G4Tubs* lead_lining_tubs = new G4Tubs("lead_lining_tubs", 15.915 *mm, 17.914 *mm, 50. *mm, 0. *deg, 360. *deg);

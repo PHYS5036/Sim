@@ -29,8 +29,8 @@
 #include <fstream>
 using namespace std;
 
-string home=getenv("HOME");
-void SmearSpectrum( string finname  = home+"/data/G4_SOURCE1.root", 
+string home=getenv("OUTPUT_DIR");
+void SmearSpectrum( string finname  = home+"/G4_SOURCE1.root", 
 		    float resconst = 3.3,
 		    float respower = -0.5)
 // Resolution parameters from fit to NaI data: resconst = 3.3, respower = -0.5
@@ -117,15 +117,24 @@ void SmearSpectrum( string finname  = home+"/data/G4_SOURCE1.root",
   hE->GetXaxis()->SetRangeUser(0, maxEnergy);
 
   string s1 = (string)finname;
-  string outname = s1.substr(0, s1.find(".", 0));
-  outname.append(".pdf");
-
-  string outname1 = s1.substr(0, s1.find(".", 0));
-  outname1.append(".Spe");
+  
+  // Extract just the filename without path
+  size_t lastSlash = s1.find_last_of("/");
+  string filename = (lastSlash != string::npos) ? s1.substr(lastSlash + 1) : s1;
+  
+  // Remove extension and create output names in home directory
+  string basename = filename.substr(0, filename.find(".", 0));
+  string outname = home + "/" + basename + ".pdf";
+  string outname1 = home + "/" + basename + ".Spe";
+  string bgname = home + "/Bg_Sim.Spe";
   
   ofstream obfile, osfile;
-  obfile.open((home+"/data/Bg_Sim.Spe").c_str());
+  obfile.open(bgname.c_str());
   osfile.open(outname1.c_str());
+
+  cout << "PDF output file saved to: " << outname << endl;
+  cout << "Spe output file saved to: " << outname1 << endl;
+  cout << "Background file saved to: " << bgname << endl;
 
   cout << outname1.c_str() << endl;
   for ( Int_t j = 0; j < 512+12+14; j++ ) {  
@@ -155,6 +164,5 @@ void SmearSpectrum( string finname  = home+"/data/G4_SOURCE1.root",
   osfile.close();
 
   c2->Print(outname.c_str());
-
 
 }

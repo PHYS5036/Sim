@@ -1,8 +1,8 @@
 {
-    "sourceName": "Na22",
+    "sourceName": "Cs137",
     "nEvents": "250000",
 
-    "detectorType": "0",
+    "detectorType": "1",
     "sourceHolderType": "0",
     "detectorHolderDistance": "50",
 

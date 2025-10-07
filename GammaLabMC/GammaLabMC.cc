@@ -19,7 +19,6 @@
 //---------------------------------------------------------------------------
 
 int main(int argc, char** argv) {
-
   G4RunManager*           runManager = new G4RunManager();
   PhysicsList*            phys       = new PhysicsList();
   runManager->SetUserInitialization(phys);
@@ -36,8 +35,10 @@ int main(int argc, char** argv) {
   G4UImanager * UI         = G4UImanager::GetUIpointer();
   G4VisManager* visManager = 0;
 
-  if (argc==1) {
+  
 
+  if (argc==1) {
+  std::cout << "Interactive mode" << std::endl;
   // ----------------------------------------
   // LEGACY CODE - W.O couldnt get it working, replaced with new code. Also updated vis.mac settings.
 
@@ -74,7 +75,7 @@ int main(int argc, char** argv) {
 
     std::cout << "Visualization macro executed." << std::endl;
 
-    runManager->BeamOn(50);
+    // runManager->BeamOn(50);
 
     // std::cout << "Beam on complete." << std::endl;
 
