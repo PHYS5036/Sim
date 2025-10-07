@@ -10,13 +10,13 @@
 PhysicsListMessenger::PhysicsListMessenger( PhysicsList* PhysList )
   :fPhysicsList(PhysList)
 {
-  fPhysicsListDir        = new G4UIdirectory("/SodiumIodideMC/physics/");
+  fPhysicsListDir        = new G4UIdirectory("/GammaLabMC/physics/");
   fPhysicsListDir->SetGuidance("PhysicsList geometry control");
 
-  fEmModelCmd = new G4UIcmdWithAString("/SodiumIodideMC/physics/SetEmModel",this);
+  fEmModelCmd = new G4UIcmdWithAString("/GammaLabMC/physics/SetEmModel",this);
   fEmModelCmd->SetGuidance("Select which EM model to use: Standard, Penelope or Livermore");
 
-  fEmProcessCmd = new G4UIcmdWithAString("/SodiumIodideMC/physics/SetEmProcess",this);
+  fEmProcessCmd = new G4UIcmdWithAString("/GammaLabMC/physics/SetEmProcess",this);
   fEmProcessCmd->SetGuidance("Select which EM gamma processes to use: All, Photoelectric, Compton or Pair");
 }
 

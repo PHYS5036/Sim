@@ -12,10 +12,10 @@
 AnalysisMessenger::AnalysisMessenger(AnalysisManager* anMana)
 :fAnalysisManager(anMana)
 {
-  fAnalysisDir = new G4UIdirectory("/SodiumIodideMC/analysis/");
+  fAnalysisDir = new G4UIdirectory("/GammaLabMC/analysis/");
   fAnalysisDir->SetGuidance("Analysis output control");
 
-  fOutFileCmd = new G4UIcmdWithAString("/SodiumIodideMC/analysis/setOutputFile",this);
+  fOutFileCmd = new G4UIcmdWithAString("/GammaLabMC/analysis/setOutputFile",this);
   fOutFileCmd->SetGuidance("Set the full name and path of the output ROOT file");
   fOutFileCmd->SetParameterName("choice",true);
   fOutFileCmd->AvailableForStates(G4State_PreInit,G4State_Idle);

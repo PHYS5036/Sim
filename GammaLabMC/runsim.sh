@@ -11,7 +11,7 @@ then
     sed -i '33s/SOURCE1/'$1'/g' SmearSpectrum.C
 
     root -b -q GenerateSpectrum.C++
-    SodiumIodideMC macros/batch.mac
+    GammaLabMC macros/batch.mac
     root -b -q SmearSpectrum.C++
 
     rm ~/data/*.root

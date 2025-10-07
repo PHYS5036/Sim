@@ -1,0 +1,12 @@
+/GammaLabMC/detector/DetectorType 0 
+/GammaLabMC/detector/SourceHolderType 0 
+/GammaLabMC/detector/DetectorDistance 50 
+/GammaLabMC/detector/AbsorberOn 0 
+/GammaLabMC/detector/AbsorberMaterial G4_Pb 
+/GammaLabMC/detector/AbsorberThickness 10.0 
+/GammaLabMC/physics/SetEmModel Standard 
+/GammaLabMC/physics/SetEmProcess All 
+/run/initialize 
+/GammaLabMC/generator/Mode 1 
+/GammaLabMC/generator/InputFile Gen_GAGG_Cs137.root 
+/GammaLabMC/analysis/setOutputFile G4_GAGG_Cs137.root 

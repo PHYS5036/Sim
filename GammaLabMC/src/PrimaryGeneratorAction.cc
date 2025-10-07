@@ -134,6 +134,10 @@ void PrimaryGeneratorAction::SetUpROOTInput(TString filename)
     if( bname == "En_Gam"  ) branch->SetAddress( &fEp    );
 
   }
+
+  std::cout << "PrimaryGeneratorAction::SetUpROOTInput(TString filename) - Found " 
+      << fNGenBranches << " branches in input file, with number of events: "
+      << fGenTree->GetEntries() << std::endl;
 }
 
 //---------------------------------------------------------------------------

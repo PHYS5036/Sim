@@ -1,2 +1,2 @@
-# Sim
-Simulation software and set up for PHYS5036 labs
+# Gamma Labs Simulation Software
+Simulation software and set up for attentuation and absolute determination experiments for the PHYS5036 labs.

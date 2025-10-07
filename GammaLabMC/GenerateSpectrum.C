@@ -25,7 +25,7 @@ using namespace std;
 void GenerateSpectrum( const char* specname = "macros/SOURCE1.txt", 
 		       const char* outname  = "~/data/Gen_SOURCE1.root",
 		       int   nevents  = 250000, 
-		       float distance = 5.0 )
+		       float distance = 0.0)
 {
 
   //  -----------------------------------------------------------------------------
@@ -33,8 +33,8 @@ void GenerateSpectrum( const char* specname = "macros/SOURCE1.txt",
   //-----------------------------------------------------------------------------
 
   float     fVx = 0.0;         // x position of gamma source in cm
-  float     fVy = -1.0;         // y position of gamma source in cm
-  float     fVz = -distance;   // z position of gamma source in cm
+  float     fVy = 0.0;         // y position of gamma source in cm
+  float     fVz = distance;   // z position of gamma source in cm
 
   float     fGammaPx;          // x component of gamma momentum in MeV
   float     fGammaPy;          // y component of gamma momentum in MeV
@@ -95,25 +95,24 @@ void GenerateSpectrum( const char* specname = "macros/SOURCE1.txt",
     
     // Randomly generate angular distributions (in polar coordinates)
     float ph1     = fRand->Uniform( -TMath::Pi(), TMath::Pi() );
-    float costh  = fRand->Uniform( -1, 1 );
+    
+    // Want to boost statistics for attenuation experiment
+  
+
+    float costh  = fRand->Uniform( -1, 1 ); 
     float th     = TMath::ACos( costh );
 
     if( (BRpk[0] + BRpk[1]) < 1 ) {
       // Randomly generate photon energy spectrum from read-in energies and branching ratios
       float branchseed = fRand->Uniform ( 0., 1.);
-      if( branchseed < BRpk[0] )
-	fGammaEn = Epk[0];
-      else if( branchseed > BRpk[0] && branchseed < (BRpk[0]+BRpk[1]) )
-	fGammaEn = Epk[1];
-      else
-	continue;
-    }
-    else {
+      if( branchseed < BRpk[0] ) fGammaEn = Epk[0];
+      else if (branchseed > BRpk[0] && branchseed < (BRpk[0]+BRpk[1])) fGammaEn = Epk[1];
+      else continue;
+
+    } else {
       float branchseed = fRand->Uniform ( 0., (BRpk[0]+BRpk[1]) );
-      if( branchseed < BRpk[0] )
-	fGammaEn = Epk[0];
-      else if( branchseed > BRpk[0] && branchseed < (BRpk[0]+BRpk[1]) )
-	fGammaEn = Epk[1];      
+      if(branchseed < BRpk[0]) fGammaEn = Epk[0];
+      else if(branchseed > BRpk[0] && branchseed < (BRpk[0]+BRpk[1])) fGammaEn = Epk[1];      
     }
 
     // Set Cartesian momentum components

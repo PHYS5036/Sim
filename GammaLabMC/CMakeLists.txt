@@ -1,11 +1,11 @@
 
 cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
-project(SodiumIodideMC)
+project(GammaLabMC)
 
 find_package(Geant4 REQUIRED)
 
 ## Get the ROOT config
-find_package(ROOT "6.22" REQUIRED)
+find_package(ROOT REQUIRED)
 set(INC_ROOT ${ROOT_INCLUDE_DIRS})
 set(LIB_ROOT ${ROOT_LIBRARIES})
 

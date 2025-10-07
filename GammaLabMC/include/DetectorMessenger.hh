@@ -32,6 +32,10 @@ private:
   G4UIcmdWithAString*          fAbsorberMaterialCmd;
   G4UIcmdWithADouble*          fAbsorberThicknessCmd;
 
+  G4UIcmdWithADouble*          fDetectorDistanceCmd;
+  G4UIcmdWithAnInteger*        fDetectorTypeCmd;
+  G4UIcmdWithAnInteger*        fSourceHolderTypeCmd;
+
   G4UIcommand*                 fUpdateCmd;
 };
 
