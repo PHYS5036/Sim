@@ -1,6 +1,7 @@
 .vscode/*
 SodiumIodideMC/install
 SodiumIodideMC/src/.ipynb_checkpoints
+*.Spe
 *.spe
 *.pdf
 *.d
