@@ -38,7 +38,7 @@ if(len(sys.argv)>=3):
     if any(particle == sys.argv[1] for particle in particleTypes):
         partName = sys.argv[1]
         energy   = sys.argv[2]
-        seed     = 0
+        seed     = "0"
 
         #---------------------
         # Write Macro file
@@ -62,7 +62,7 @@ if(len(sys.argv)>=3):
             
         if(len(sys.argv)>7):
             seed = sys.argv[6]
-            outName = outName + "Seed-" + string(seed) + "_"
+            outName = outName + "Seed-" + seed + "_"
 
         # Construct output file name
         outName = outName+"Out.csv\n"
