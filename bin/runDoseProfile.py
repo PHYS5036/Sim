@@ -72,6 +72,12 @@ if(len(sys.argv)>=3):
         f.write("/DoseProfileMC/detector/TumourHeight 0.0\n")
         
         f.write("/DoseProfileMC/physics/addPhysics "+physicsList[physicsFlag]+"\n")
+
+        if(len(sys.argv)>7):
+            seed = sys.argv[6]
+
+        f.write("/DoseProfileMC/generator/Seed "+seed+"\n")
+        
         f.write("/run/initialize\n")
 
         f.write("/gps/particle "+particleDict[partName]+"\n")
@@ -103,7 +109,7 @@ if(len(sys.argv)>=3):
 
         
     else:
-        print('WARNING, wrong input: please re-run as eg ./runsim.py [beam type] [energy] [N events] [Tumour 0/1] [Hadronic 0/1]')
+        print('WARNING, wrong input: please re-run as eg ./runsim.py [beam type] [energy] [N events] [Tumour 0/1] [Hadronic 0/1] [Seed int]')
         print('where [beam type] is either gamma, electron, proton or ion and [energy] is in MeV')
 
     
