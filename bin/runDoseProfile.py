@@ -38,6 +38,7 @@ if(len(sys.argv)>=3):
     if any(particle == sys.argv[1] for particle in particleTypes):
         partName = sys.argv[1]
         energy   = sys.argv[2]
+        seed     = 0
 
         #---------------------
         # Write Macro file
@@ -58,6 +59,10 @@ if(len(sys.argv)>=3):
             physicsFlag = int(sys.argv[5])
         if(physicsFlag==1):    
             outName = outName + "Hadronic_"
+            
+        if(len(sys.argv)>7):
+            seed = sys.argv[6]
+            outName = outName + "Seed-" + string(seed) + "_"
 
         # Construct output file name
         outName = outName+"Out.csv\n"
@@ -73,9 +78,7 @@ if(len(sys.argv)>=3):
         
         f.write("/DoseProfileMC/physics/addPhysics "+physicsList[physicsFlag]+"\n")
 
-        if(len(sys.argv)>7):
-            seed = sys.argv[6]
-            f.write("/DoseProfileMC/generator/Seed "+seed+"\n")
+        f.write("/DoseProfileMC/generator/Seed "+seed+"\n")
         
         f.write("/run/initialize\n")
 
