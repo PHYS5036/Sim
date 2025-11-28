@@ -28,7 +28,7 @@ physicsList  = ['standard_opt3','QGSP_BIC_EMY']
 physicsFlag  = 0
 
 # Detector flags
-tumourFlag   = "0"
+tumourFlag   = "1"
 
 # Number of Events
 nEvents = "10000"
