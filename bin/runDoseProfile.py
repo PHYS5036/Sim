@@ -75,8 +75,7 @@ if(len(sys.argv)>=3):
 
         if(len(sys.argv)>7):
             seed = sys.argv[6]
-
-        f.write("/DoseProfileMC/generator/Seed "+seed+"\n")
+            f.write("/DoseProfileMC/generator/Seed "+seed+"\n")
         
         f.write("/run/initialize\n")
 
