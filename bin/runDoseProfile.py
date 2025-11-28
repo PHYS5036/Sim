@@ -28,7 +28,7 @@ physicsList  = ['standard_opt3','QGSP_BIC_EMY']
 physicsFlag  = 0
 
 # Detector flags
-tumourFlag   = "1"
+tumourFlag   = "0"
 
 # Number of Events
 nEvents = "10000"
@@ -38,7 +38,7 @@ if(len(sys.argv)>=3):
     if any(particle == sys.argv[1] for particle in particleTypes):
         partName = sys.argv[1]
         energy   = sys.argv[2]
-        seed     = "0"
+        seed     = "1"
 
         #---------------------
         # Write Macro file
