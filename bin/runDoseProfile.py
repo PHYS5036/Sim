@@ -60,7 +60,7 @@ if(len(sys.argv)>=3):
         if(physicsFlag==1):    
             outName = outName + "Hadronic_"
             
-        if(len(sys.argv)>7):
+        if(len(sys.argv)>=7):
             seed = sys.argv[6]
             outName = outName + "Seed-" + seed + "_"
 
