@@ -138,25 +138,33 @@ void SmearSpectrum( string finname  = home+"/G4_SOURCE1.root",
 
   cout << outname1.c_str() << endl;
   for ( Int_t j = 0; j < 512+12+14; j++ ) {  
-    if( j < 9 ) {
+    if( j < 7 ) {
       obfile << "dummy" << endl;
       osfile << "dummy" << endl;
     }
-    else if( j == 9 ) {
+	else if( j == 7 ) {
+      obfile << "$MEAS_TIM:" << endl;
+      osfile << "$MEAS_TIM:" << endl;
+	}
+	else if( j == 8 ) {
       obfile << "600 600" << endl;
       osfile << "600 600" << endl;
     }
-    else if( j < 12 ) {
-      obfile << "dummy" << endl;
-      osfile << "dummy" << endl;
+    else if( j == 9 ) {
+      obfile << "$DATA:" << endl;
+      osfile << "$DATA:" << endl;
     }
-    else if( j > (512+12) ) {
+	else if ( j==10 ) {
+      obfile << "0 511" << endl;
+      osfile << "0 511" << endl;
+	}
+    else if( j > (511+12) ) {
       obfile << "dummy" << endl;
       osfile << "dummy" << endl;
     }
     else {
       obfile << "0" << endl;
-      osfile << hE->GetBinContent(j-12) << endl;
+      osfile << hE->GetBinContent(j-11) << endl;
     }
   }
 
