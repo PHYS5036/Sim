@@ -42,7 +42,7 @@ if(len(sys.argv)>=3):
         #---------------------
         # Write Macro file
         #---------------------
-        outName = outdir + "DoseMC_"+partName+"_"+energy+"MeV_"
+        outName = os.path.join(output_dir, "DoseMC_"+partName+"_"+energy+"MeV_")
 
         if(len(sys.argv)>=4):
             nEvents = sys.argv[3]

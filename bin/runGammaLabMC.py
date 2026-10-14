@@ -76,7 +76,7 @@ detectorHolderDistance = config.get("detectorHolderDistance", "55")
 resconst = config.get("resconst", "3.3")
 respower = config.get("respower", "-0.5")
 
-detectorTypeName = 'SoidiumIodide' if detectorType == '1' else 'GAGG'
+detectorTypeName = 'SodiumIodide' if detectorType == '1' else 'GAGG'
 
 print("\n ----- Settings from config file -----")
 print(f" sourceName: {sourceName}")
@@ -126,7 +126,10 @@ print("simdir:", simdir)
 print("sourcePropName:", sourcePropName)
 print("genName:", genName)
 print("nEvents:", nEvents)
-subprocess.run(["root", "-b", "-q", f'{simdir}/GammaLabMC/GenerateSpectrum.C+("{simdir}{sourcePropName}","{genName}",{nEvents})'])
+subprocess.run([
+    "root", "-b", "-q",
+    f'{simdir}/GammaLabMC/GenerateSpectrum.C+("{simdir}{sourcePropName}","{genName}",{nEvents},0,{detectorType},{sourceHolderType},{detectorHolderDistance})'
+], check=True)
 print("Generated spectrum!")
 
 # ---------------------
@@ -153,7 +156,7 @@ print("Macro file written.")
 # subprocess.run(["./GammaLabMC", macroName])  # Just for local run
 # subprocess.run(["GammaLabMC", macroName]) # For run on cluster
 print(f"Running Geant4 simulation at GammaLabMC")
-subprocess.run(["GammaLabMC", macroName])
+subprocess.run(["GammaLabMC", macroName], check=True)
 
 os.remove(macroName)
 
@@ -161,7 +164,7 @@ os.remove(macroName)
 # Run Smear code
 # ---------------------
 print(f"Smearing spectrum with resconst={resconst}, respower={respower}")
-subprocess.run(["root", "-b", "-q", f'{simdir}/GammaLabMC/SmearSpectrum.C+("{simName}",{resconst},{respower})'])
+subprocess.run(["root", "-b", "-q", f'{simdir}/GammaLabMC/SmearSpectrum.C+("{simName}",{resconst},{respower})'], check=True)
 print("Smeared spectrum!")
 
 os.remove(genName)

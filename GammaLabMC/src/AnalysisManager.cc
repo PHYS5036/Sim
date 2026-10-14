@@ -9,6 +9,7 @@
 
 #include "TROOT.h"
 #include "TApplication.h"
+#include "TParameter.h"
 #include "TFile.h"
 #include "TSystem.h"
 #include "TTree.h"
@@ -23,6 +24,10 @@ AnalysisManager::AnalysisManager()
 
   fOutFileName = TString("output/out_default.root");
   fOutputType  = TString("detector");
+  fGeneratedEventCount = 0;
+  fTransportedEventCount = 0;
+  fROOTfile = NULL;
+  fROOTtree = NULL;
 
   fAnaMessenger = new AnalysisMessenger(this);
 }
@@ -31,16 +36,26 @@ AnalysisManager::AnalysisManager()
 
 AnalysisManager::~AnalysisManager()
 {
-   fROOTtree->Write();
-   fROOTfile->Close();
+   if( fROOTfile && fROOTtree ) {
+     fROOTfile->cd();
+     fROOTtree->Write();
+   }
+   if( fROOTfile ) fROOTfile->Close();
 }
 
 //---------------------------------------------------------------------------
 
 void AnalysisManager::InitOutput()
 { 
+  if( fROOTfile ) return;
+
+  TString outDir = gSystem->DirName(fOutFileName);
+  if( outDir != "" && outDir != "." ) gSystem->mkdir(outDir, kTRUE);
 
   fROOTfile = new TFile(fOutFileName,"RECREATE","fROOTfile",1);
+  fROOTfile->cd();
+  TParameter<Long64_t>("GeneratedEventCount", fGeneratedEventCount).Write();
+  TParameter<Long64_t>("TransportedEventCount", fTransportedEventCount).Write();
   fROOTtree = new TTree("T","Output Tree");
   fROOTtree->SetAutoSave();
 
@@ -141,7 +156,7 @@ void AnalysisManager::FillTree()
   fPth    = (Float_t)fPdir.getTheta();                         
   fPph    = (Float_t)fPdir.getPhi();                                                      
   fPEne   = (Float_t)fPEne*1000;                         
-  fPpdg   = (Int_t)  fPPDef->GetPDGEncoding();
+  fPpdg   = fPPDef ? (Int_t)fPPDef->GetPDGEncoding() : 0;
   
   fROOTtree->Fill();
 }

@@ -31,6 +31,10 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   inline void SetDetectorDistance ( G4double dist )  { fDetectorDistance = dist; }
   inline void SetSourceHolderType ( G4int type )     { fSourceHolderType = type; }
 
+  inline G4int    GetDetectorType()     const { return fDetectorType;     }
+  inline G4double GetDetectorDistance() const { return fDetectorDistance; }
+  inline G4int    GetSourceHolderType() const { return fSourceHolderType; }
+
   inline void SetAbsorberOn        ( G4int    abson )  { fAbsorberOn       = abson; }
   inline void SetAbsorberMaterial  ( G4String mname )  { fAbsorberMaterial = mname; }
   inline void SetAbsorberThickness ( G4double thick )  { fAbsorberThick    = thick; }

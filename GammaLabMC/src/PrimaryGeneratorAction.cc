@@ -7,6 +7,7 @@
 
 #include "TObjArray.h"
 #include "TBranch.h"
+#include "TParameter.h"
 #include "TString.h"
 
 #include "PrimaryGeneratorAction.hh"
@@ -24,9 +25,11 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
   fGenFile            = NULL;
   fGenTree            = NULL;
 
-  fNevent             = 1;
+  fMode               = EPGA_GPS;
+  fNevent             = 0;
   fNGenBranches       = 0;
   fDump               = 0;
+  fGeneratedEventCount = 0;
 
   fParticleTable      = G4ParticleTable::GetParticleTable();
   fPDefinition        = NULL;
@@ -92,11 +95,15 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
       fEp          = fParticleGun->GetParticleEnergy()/MeV;
       fTp          = fParticleGun->GetParticleTime();
       fPDefinition = fParticleGun->GetParticleDefinition();
-
-    break;
     }
+    else {
+      G4cout << "PrimaryGeneratorAction: ROOT mode selected but no input tree loaded" << G4endl;
+    }
+    break;
+
   default:
     G4cout << "Unknown mode given to PrimiaryGeneratorAction (0 for gps or 1 for root)" << G4endl;
+    break;
   }			       
 }
 
@@ -109,12 +116,22 @@ void PrimaryGeneratorAction::SetUpROOTInput(TString filename)
   fMode = EPGA_ROOT;
   
   fGenFile = new TFile(filename);
-  if(!fGenFile)
+  if(!fGenFile || fGenFile->IsZombie()) {
     G4cout << "PrimaryGeneratorAction::SetUpRootInput(TString filename) - Didn't find filename" << G4endl;
+    return;
+  }
   
   fGenTree       = dynamic_cast<TTree*>(fGenFile->Get("h1"));
-  if(!fGenTree)
+  if(!fGenTree) {
     G4cout << "PrimaryGeneratorAction::SetUpRootInput(TString filename) - Didn't find ntuple h1" << G4endl;
+    return;
+  }
+
+  TParameter<Long64_t>* generatedEventCount =
+      dynamic_cast<TParameter<Long64_t>*>(fGenFile->Get("GeneratedEventCount"));
+  fGeneratedEventCount = generatedEventCount
+      ? static_cast<G4int>(generatedEventCount->GetVal())
+      : static_cast<G4int>(fGenTree->GetEntries());
     
   fNGenBranches       = fGenTree->GetNbranches();
   TObjArray* objarray = fGenTree->GetListOfBranches();
@@ -137,7 +154,8 @@ void PrimaryGeneratorAction::SetUpROOTInput(TString filename)
 
   std::cout << "PrimaryGeneratorAction::SetUpROOTInput(TString filename) - Found " 
       << fNGenBranches << " branches in input file, with number of events: "
-      << fGenTree->GetEntries() << std::endl;
+      << fGenTree->GetEntries() << " (generated before cut: "
+      << fGeneratedEventCount << ")" << std::endl;
 }
 
 //---------------------------------------------------------------------------

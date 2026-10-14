@@ -1,6 +1,11 @@
 #include <stdexcept>
 #include <iostream>
+#include <cstdlib>
+#include <filesystem>
+#include <sstream>
+#include <string>
 #include "globals.hh"
+#include "G4SystemOfUnits.hh"
 
 #include "G4RunManager.hh"
 #include "G4UImanager.hh"
@@ -75,9 +80,42 @@ int main(int argc, char** argv) {
 
     std::cout << "Visualization macro executed." << std::endl;
 
-    // runManager->BeamOn(50);
+    // Generate an isotropic event list with the same pre-transport geometric
+    // cut used by the batch pipeline, then transport only the retained gammas.
+    // Override defaults with GLMC_VIS_SOURCE / GLMC_VIS_NDECAYS; set
+    // GLMC_VIS_CUT=0 to skip this and use whatever vis.mac configured.
+    const char* cutEnv = std::getenv("GLMC_VIS_CUT");
+    if (!cutEnv || std::string(cutEnv) != "0") {
+      const std::string sourceDir = GAMMALABMC_SOURCE_DIR;
+      const char* srcEnv = std::getenv("GLMC_VIS_SOURCE");
+      const char* nEnv   = std::getenv("GLMC_VIS_NDECAYS");
+      const std::string specFile = srcEnv ? srcEnv : sourceDir + "/macros/Cs137.txt";
+      const std::string nDecays  = nEnv ? nEnv : "50000";
 
-    // std::cout << "Beam on complete." << std::endl;
+      std::filesystem::create_directories("output");
+      const std::string genFile =
+          (std::filesystem::absolute("output") / "Gen_vis_cut.root").string();
+
+      std::ostringstream rootCmd;
+      rootCmd << "root -l -b -q '" << sourceDir << "/GenerateSpectrum.C(\""
+              << specFile << "\",\"" << genFile << "\"," << nDecays << ",0,"
+              << detCon->GetDetectorType() << ","
+              << detCon->GetSourceHolderType() << ","
+              << detCon->GetDetectorDistance()/CLHEP::mm << ")'";
+      std::cout << "Generating cut vis events: " << rootCmd.str() << std::endl;
+
+      if (std::system(rootCmd.str().c_str()) == 0) {
+        UImanager->ApplyCommand("/GammaLabMC/generator/Mode 1");
+        UImanager->ApplyCommand("/GammaLabMC/generator/InputFile " + genFile);
+        if (pga->GetNEvents() > 0) {
+          UImanager->ApplyCommand("/run/beamOn " + std::to_string(pga->GetNEvents()));
+        } else {
+          std::cout << "No events survived the cut; nothing to draw." << std::endl;
+        }
+      } else {
+        std::cout << "Cut event generation failed; vis.mac settings are unchanged." << std::endl;
+      }
+    }
 
     // Start the interactive session
     ui->SessionStart();
