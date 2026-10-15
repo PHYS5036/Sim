@@ -20,6 +20,7 @@
 #include "TRandom3.h"
 #include "TMath.h"
 #include "TFile.h"
+#include "TParameter.h"
 #include "TTree.h"
 #include "TH1F.h"
 #include "TCanvas.h"
@@ -43,6 +44,10 @@ void SmearSpectrum( string finname  = home+"/G4_SOURCE1.root",
   
   TFile *fin = new TFile( finname.c_str() );
   TTree* T   = (TTree*)fin->Get("T");
+  TParameter<Long64_t>* generatedEventCount =
+      dynamic_cast<TParameter<Long64_t>*>(fin->Get("GeneratedEventCount"));
+  TParameter<Long64_t>* transportedEventCount =
+      dynamic_cast<TParameter<Long64_t>*>(fin->Get("TransportedEventCount"));
   
   //Declaration of leaves types
   Float_t         Prim_E;
@@ -126,11 +131,29 @@ void SmearSpectrum( string finname  = home+"/G4_SOURCE1.root",
   string basename = filename.substr(0, filename.find(".", 0));
   string outname = home + "/" + basename + ".pdf";
   string outname1 = home + "/" + basename + ".Spe";
+  string countsname = home + "/" + basename + "_event_counts.txt";
   string bgname = home + "/Bg_Sim.Spe";
   
-  ofstream obfile, osfile;
+  ofstream obfile, osfile, countsfile;
   obfile.open(bgname.c_str());
   osfile.open(outname1.c_str());
+  if (generatedEventCount && transportedEventCount) {
+    countsfile.open(countsname.c_str());
+    if (!countsfile) {
+      cerr << "Could not write event-count summary: " << countsname << endl;
+    } else {
+      countsfile << "GeneratedEventCount " << generatedEventCount->GetVal() << '\n'
+                 << "TransportedEventCount " << transportedEventCount->GetVal() << '\n';
+      cout << "Event-count summary saved to: " << countsname << endl;
+    }
+  } else {
+    cerr << "Input simulation file does not contain generated/transported "
+         << "event counts; no event-count summary was written." << endl;
+  }
+
+  cout << "PDF output file saved to: " << outname << endl;
+  cout << "Spe output file saved to: " << outname1 << endl;
+  cout << "Background file saved to: " << bgname << endl;
 
   cout << "PDF output file saved to: " << outname << endl;
   cout << "Spe output file saved to: " << outname1 << endl;
@@ -170,6 +193,7 @@ void SmearSpectrum( string finname  = home+"/G4_SOURCE1.root",
 
   obfile.close();
   osfile.close();
+  countsfile.close();
 
   c2->Print(outname.c_str());
 

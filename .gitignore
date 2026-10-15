@@ -1,6 +1,7 @@
 .vscode/*
 SodiumIodideMC/install
 SodiumIodideMC/src/.ipynb_checkpoints
+**/build/*
 *.Spe
 *.spe
 *.pdf
@@ -8,6 +9,9 @@ SodiumIodideMC/src/.ipynb_checkpoints
 *.so
 *.root
 *.pcm
+*.pyc
+**/output*
+*.cmake
 *Makefile
 **/CMakeFiles
 CMakeCache.txt

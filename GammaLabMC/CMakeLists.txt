@@ -47,6 +47,7 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 #
 add_executable(${PROJECT_NAME} ${PROJECT_NAME}.cc ${sources} ${headers})
 target_link_libraries(${PROJECT_NAME} ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
+target_compile_definitions(${PROJECT_NAME} PRIVATE GAMMALABMC_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
 #----------------------------------------------------------------------------
 #----------------------------------------------------------------------------
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX

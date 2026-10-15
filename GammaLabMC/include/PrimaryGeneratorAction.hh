@@ -33,7 +33,8 @@ public:
   void SetMode(G4int mode){ fMode = mode; }
   void SetDumpBeam(G4int dump){ fDump = dump; }
 
-  G4int GetNEvents()                  { return static_cast<G4int>(fGenTree->GetEntries()); }
+  G4int GetNEvents()                  { return fGenTree ? static_cast<G4int>(fGenTree->GetEntries()) : 0; }
+  G4int GetGeneratedEventCount()      { return fGeneratedEventCount; }
   G4int GetMode()                     { return fMode; }
   G4int GetDumpBeam()                 { return fDump; }
   G4ThreeVector GetVertex()           { return G4ThreeVector(fVx,  fVy,  fVz);  }
@@ -56,6 +57,7 @@ private:
   TTree*                     fGenTree;  
   Int_t                      fNGenBranches;   
   Int_t                      fNevent;
+  G4int                      fGeneratedEventCount;
   Float_t                    fVx;
   Float_t                    fVy;
   Float_t                    fVz;
@@ -69,5 +71,4 @@ private:
 #endif
 
 //---------------------------------------------------------------------------
-
 

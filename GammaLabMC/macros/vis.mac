@@ -85,3 +85,14 @@
 #
 # Re-establish auto refreshing and verbosity:
 /vis/verbose warnings
+
+# GammaLabMC (no args) now generates a cut event list for the current
+# geometry and transports it after this macro. To use an uncut GPS source
+# instead, run with GLMC_VIS_CUT=0 and uncomment the lines below.
+#/gps/particle gamma
+#/gps/pos/type Point
+#/gps/pos/centre 0 0 0 mm
+#/gps/ang/type iso
+#/gps/ene/type Mono
+#/gps/ene/mono 661.657 keV
+#/run/beamOn 200

@@ -19,6 +19,19 @@ if not os.path.exists(output_dir):
 
 macroName = "runmacro.mac"
 
+# Determine paths are set.
+project_dir = os.environ.get('PROJECT_DIR')
+if not project_dir:
+    print("Error: PROJECT_DIR environment variable is not set. Make sure to source bash script.")
+    sys.exit(1)
+
+output_dir = os.environ.get('OUTPUT_DIR')
+if not output_dir:
+    print("Error: OUTPUT_DIR environment variable is not set. Make sure to source bash script.")
+    sys.exit(1)
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
+
 # Allowed types of particle
 particleTypes = ["gamma","electron","proton","ion"]
 particleDict  = {"gamma":"gamma", "electron":"e-", "proton":"proton", "ion":"ion"}
@@ -43,7 +56,7 @@ if(len(sys.argv)>=3):
         #---------------------
         # Write Macro file
         #---------------------
-        outName = "DoseMC_"+partName+"_"+energy+"MeV_"
+        outName = os.path.join(output_dir, "DoseMC_"+partName+"_"+energy+"MeV_")
 
         if(len(sys.argv)>=4):
             nEvents = sys.argv[3]
@@ -104,11 +117,7 @@ if(len(sys.argv)>=3):
         #--------------------------
         subprocess.run(["DoseProfileMC",macroName])
 
-
         os.remove(macroName)
-
-
-
         
     else:
         print('WARNING, wrong input: please re-run as eg ./runsim.py [beam type] [energy] [N events] [Tumour 0/1] [Hadronic 0/1] [Seed int]')

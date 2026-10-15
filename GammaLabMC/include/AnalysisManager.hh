@@ -24,6 +24,10 @@ public:
   ~AnalysisManager();
 
   void InitOutput();
+  void SetEventCounts(G4int generated, G4int transported) {
+    fGeneratedEventCount = generated;
+    fTransportedEventCount = transported;
+  }
 
   void ZeroArray();
   void FillArray( Int_t );
@@ -54,6 +58,8 @@ private:
   TString               fOutputType;
   TFile*                fROOTfile;
   TTree*                fROOTtree;
+  G4int                 fGeneratedEventCount;
+  G4int                 fTransportedEventCount;
   
   // Primary
   Float_t               fPEne;

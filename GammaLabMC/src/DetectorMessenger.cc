@@ -30,7 +30,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* Detect)
   fDetectorDistanceCmd->SetGuidance("Set the distance from source to detector front face in mm.");
 
   fDetectorTypeCmd = new G4UIcmdWithAnInteger("/GammaLabMC/detector/DetectorType",this);
-  fDetectorTypeCmd->SetGuidance("Set the type of detector: 0 = Sodium Iodide, 1 = GAGG.");
+  fDetectorTypeCmd->SetGuidance("Set the type of detector: 0 = GAGG, 1 = Sodium Iodide.");
 
   fSourceHolderTypeCmd = new G4UIcmdWithAnInteger("/GammaLabMC/detector/SourceHolderType",this);
   fSourceHolderTypeCmd->SetGuidance("Set the type of source holder: 0 = 3D printed plastic with lead lining, 1 = Old pencil source holder (lead block with hole).");
