@@ -16,3 +16,5 @@ SodiumIodideMC/src/.ipynb_checkpoints
 **/CMakeFiles
 CMakeCache.txt
 cmake_install.cmake
+/visualization/
+/visualization-dose/

@@ -25,11 +25,14 @@ jobs:
       - name: Check out source
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
-      - name: Install ROOT development dependencies
-        if: matrix.simulation == 'GammaLabMC'
+      - name: Install test and ROOT development dependencies
+        shell: bash
         run: |
           apt-get update -qq
-          apt-get install -y --no-install-recommends nlohmann-json3-dev libvdt-dev
+          apt-get install -y --no-install-recommends python3-venv
+          if [[ "$SIMULATION" == GammaLabMC ]]; then
+            apt-get install -y --no-install-recommends nlohmann-json3-dev libvdt-dev
+          fi
 
       - name: Configure and compile
         shell: bash
@@ -38,3 +41,36 @@ jobs:
           cmake -S "$SIMULATION" -B "build/$SIMULATION" -DCMAKE_BUILD_TYPE=Release
           cmake --build "build/$SIMULATION" --parallel 2
           test -x "build/$SIMULATION/$SIMULATION"
+
+      - name: Install visualization test dependencies
+        shell: bash
+        run: |
+          python3 -m venv /tmp/visualization-venv
+          /tmp/visualization-venv/bin/pip install -r requirements-visualization.txt nbconvert ipykernel
+
+      - name: Test headless images and notebook 3D visualization
+        shell: bash
+        run: |
+          source /etc/profile.d/localSetup.sh
+          unset DISPLAY WAYLAND_DISPLAY
+          /tmp/visualization-venv/bin/python -m unittest discover -s tests -v
+          /tmp/visualization-venv/bin/python tests/smoke_visualization.py \
+            --simulation "$SIMULATION" \
+            --executable "build/$SIMULATION/$SIMULATION" \
+            --output "$RUNNER_TEMP/visualization/$SIMULATION"
+
+      - name: Upload images, 3D scene and executed notebook
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: visualization-${{ matrix.simulation }}
+          path: |
+            ${{ runner.temp }}/visualization/${{ matrix.simulation }}/**/*.png
+            ${{ runner.temp }}/visualization/${{ matrix.simulation }}/**/*.wrl
+            ${{ runner.temp }}/visualization/${{ matrix.simulation }}/**/*.json
+            ${{ runner.temp }}/visualization/${{ matrix.simulation }}/**/*.html
+            ${{ runner.temp }}/visualization/${{ matrix.simulation }}/**/*.ipynb
+            ${{ runner.temp }}/visualization/${{ matrix.simulation }}/**/*.mac
+            ${{ runner.temp }}/visualization/${{ matrix.simulation }}/**/*.log
+          if-no-files-found: warn
+          retention-days: 7
