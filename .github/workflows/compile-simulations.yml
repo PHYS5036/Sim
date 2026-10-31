@@ -1,0 +1,40 @@
+name: Compile Geant4 simulations
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compile:
+    name: Compile ${{ matrix.simulation }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    container:
+      image: jeffersonlab/geant4:g4v11.2.2-ubuntu24@sha256:642e1e4c41e768f44b85993eb197800cb92c623aa397940b615399193bd48e61
+    strategy:
+      fail-fast: false
+      matrix:
+        simulation: [DoseProfileMC, GammaLabMC]
+    env:
+      SIMULATION: ${{ matrix.simulation }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Install ROOT development dependencies
+        if: matrix.simulation == 'GammaLabMC'
+        run: |
+          apt-get update -qq
+          apt-get install -y --no-install-recommends nlohmann-json3-dev libvdt-dev
+
+      - name: Configure and compile
+        shell: bash
+        run: |
+          source /etc/profile.d/localSetup.sh
+          cmake -S "$SIMULATION" -B "build/$SIMULATION" -DCMAKE_BUILD_TYPE=Release
+          cmake --build "build/$SIMULATION" --parallel 2
+          test -x "build/$SIMULATION/$SIMULATION"
