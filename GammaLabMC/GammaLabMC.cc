@@ -24,6 +24,10 @@
 //---------------------------------------------------------------------------
 
 int main(int argc, char** argv) {
+  if (argc > 3 || (argc == 3 && std::string(argv[2]) != "--vis")) {
+    std::cerr << "Usage: GammaLabMC [macro.mac [--vis]]" << std::endl;
+    return 1;
+  }
   G4RunManager*           runManager = new G4RunManager();
   PhysicsList*            phys       = new PhysicsList();
   runManager->SetUserInitialization(phys);
@@ -128,18 +132,26 @@ int main(int argc, char** argv) {
 
   } else {
     std::cout << "Batch mode" << std::endl;
+    // Keep production runs free of trajectory-storage overhead.
+    if (argc == 3) {
+      visManager = new G4VisExecutive("warnings");
+      visManager->Initialize();
+    }
+
     G4String command = "/control/execute ";
     G4String fileName = argv[1];
     UI->ApplyCommand(command+fileName);
 
-    
-    if (pga->GetMode()==EPGA_ROOT ) {
+    // Only run the whole input list if the macro did not already start a run
+    // (e.g. a visualisation macro that draws a limited number of events).
+    if (pga->GetMode()==EPGA_ROOT && !runManager->GetCurrentRun()) {
         G4String commandr = "/run/beamOn ";
         G4int nev = pga->GetNEvents();
         char snev[50];
         sprintf( snev, "%d",nev );
         UI->ApplyCommand(commandr+snev);
     }
+    delete visManager;
     delete anaManager;
     delete runManager;
   }
