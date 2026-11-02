@@ -18,3 +18,4 @@ CMakeCache.txt
 cmake_install.cmake
 /visualization/
 /visualization-dose/
+/visualization-ci/
