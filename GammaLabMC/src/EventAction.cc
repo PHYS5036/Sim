@@ -1,5 +1,6 @@
 #include "G4VUserPrimaryGeneratorAction.hh"
 #include "G4RunManager.hh"
+#include "G4Run.hh"
 #include "G4Event.hh"
 #include "G4EventManager.hh"
 #include "G4TrajectoryContainer.hh"
@@ -29,7 +30,13 @@ EventAction::~EventAction()
 void EventAction::BeginOfEventAction(const G4Event* evt)
 { 
   if( evt->GetEventID() == 0 ) {
-    fAnaManager->SetEventCounts(fPGA->GetGeneratedEventCount(), fPGA->GetNEvents());
+    if (fPGA->GetMode() == EPGA_ROOT) {
+      fAnaManager->SetEventCounts(fPGA->GetGeneratedEventCount(), fPGA->GetNEvents());
+    } else {
+      const G4int events = G4RunManager::GetRunManager()->GetCurrentRun()
+          ->GetNumberOfEventToBeProcessed();
+      fAnaManager->SetEventCounts(events, events);
+    }
     fAnaManager->InitOutput();
   }
 }

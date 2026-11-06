@@ -38,3 +38,11 @@ jobs:
           cmake -S "$SIMULATION" -B "build/$SIMULATION" -DCMAKE_BUILD_TYPE=Release
           cmake --build "build/$SIMULATION" --parallel 2
           test -x "build/$SIMULATION/$SIMULATION"
+
+      - name: Test gamma lab generation and beta decays
+        if: matrix.simulation == 'GammaLabMC'
+        shell: bash
+        run: |
+          source /etc/profile.d/localSetup.sh
+          export GAMMALABMC_EXECUTABLE="$PWD/build/GammaLabMC/GammaLabMC"
+          python3 -m unittest discover -s tests -p 'test_gamma_lab_*.py' -v

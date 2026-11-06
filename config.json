@@ -1,5 +1,6 @@
 {
     "sourceName": "Cs137",
+    "includeBetas": false,
     "nEvents": "250000",
 
     "detectorType": "1",

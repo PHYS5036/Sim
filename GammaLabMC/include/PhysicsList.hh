@@ -7,6 +7,8 @@
 
 //---------------------------------------------------------------------------
 
+class G4RadioactiveDecayPhysics;
+
 class PhysicsList: public G4VUserPhysicsList
 {
   public:
@@ -15,6 +17,7 @@ class PhysicsList: public G4VUserPhysicsList
 
   inline void SetEmModel  ( G4String model ) { fModelName   = model; }
   inline void SetEmProcess( G4String proc  ) { fProcessName = proc;  }
+  inline void SetRadioactiveDecay(G4bool enabled) { fRadioactiveDecay = enabled; }
 
   protected:
     void ConstructParticle();
@@ -29,6 +32,8 @@ class PhysicsList: public G4VUserPhysicsList
   G4String fProcessName;
 
   PhysicsListMessenger* fPmessenger;
+  G4bool fRadioactiveDecay = false;
+  G4RadioactiveDecayPhysics* fDecayPhysics = nullptr;
 
 };
 #endif

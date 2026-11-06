@@ -1,5 +1,6 @@
 {
     "sourceName": "Cs137",
+    "includeBetas": false,
     "nEvents": "250000",
     "absorberOn": "0",
     "absorberMat": "G4_AIR",
