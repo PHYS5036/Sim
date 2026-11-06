@@ -1,5 +1,6 @@
 #include "TrackGroupAction.hh"
 #include "TrackGroupInfo.hh"
+#include "AnalysisManager.hh"
 
 #include "G4ParticleDefinition.hh"
 #include "G4Track.hh"
@@ -26,6 +27,7 @@ void TrackGroupAction::PostUserTrackingAction(const G4Track* track)
 
   for (auto* secondary : *secondaries) {
     if (secondary->GetUserInformation()) continue;
+    if (primaryIon) fAnalysisManager->AddDecayProduct(secondary);
 
     const G4int groupID = primaryIon
         ? secondary->GetTrackID()

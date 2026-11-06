@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
   runManager->SetUserInitialization(detCon);
   runManager->SetUserAction(pga);
   runManager->SetUserAction(event);
-  runManager->SetUserAction(new TrackGroupAction());
+  runManager->SetUserAction(new TrackGroupAction(anaManager));
 
   G4UImanager * UI         = G4UImanager::GetUIpointer();
   G4VisManager* visManager = 0;

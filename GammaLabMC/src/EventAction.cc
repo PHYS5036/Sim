@@ -29,6 +29,7 @@ EventAction::~EventAction()
 
 void EventAction::BeginOfEventAction(const G4Event* evt)
 { 
+  fAnaManager->ClearDecayProducts();
   if( evt->GetEventID() == 0 ) {
     if (fPGA->GetMode() == EPGA_ROOT) {
       fAnaManager->SetEventCounts(fPGA->GetGeneratedEventCount(), fPGA->GetNEvents());

@@ -49,6 +49,9 @@ energy in the detector, including its PDG code and energy deposit. Deposits from
 secondary tracks descended from that product are accumulated in the same hit;
 distinct decay products in an event appear as separate entries in the hit
 arrays.
+The `Decay_*` branches record the initial state of every immediate decay
+product from the source ion, including PDG code, kinetic energy, momentum,
+position and time; these are available for each saved detector event.
 `SmearSpectrum.C` sums all hit deposits in each event before smearing.
 Geant4's radioactive-decay and photon-evaporation datasets must be installed
 (they are included in the CI image).

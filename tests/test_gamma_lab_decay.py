@@ -76,6 +76,7 @@ class RadioactiveDecayTests(unittest.TestCase):
 #include "TTree.h"
 #include "TParameter.h"
 #include "TSystem.h"
+#include <vector>
 void CheckCounts() {
   TFile file("decay.root");
   auto tree = file.Get<TTree>("T");
@@ -87,17 +88,60 @@ void CheckCounts() {
   if (!tree || !generated || !transported ||
       generated->GetVal() != 100 || transported->GetVal() != 100)
     gSystem->Exit(1);
+  if (!tree->GetBranch("Decay_N") || !tree->GetBranch("Decay_E") ||
+      !tree->GetBranch("Decay_pdg") || !tree->GetBranch("Decay_px") ||
+      !tree->GetBranch("Decay_py") || !tree->GetBranch("Decay_pz") ||
+      !tree->GetBranch("Decay_x") || !tree->GetBranch("Decay_y") ||
+      !tree->GetBranch("Decay_z") || !tree->GetBranch("Decay_t"))
+    gSystem->Exit(1);
   Int_t nhits;
   Int_t hitPdg[50000];
   Float_t hitEdep[50000];
+  Int_t decayCount;
+  std::vector<Int_t>* decayPdg = nullptr;
+  std::vector<Float_t>* decayEnergy = nullptr;
+  std::vector<Float_t>* decayPx = nullptr;
+  std::vector<Float_t>* decayPy = nullptr;
+  std::vector<Float_t>* decayPz = nullptr;
+  std::vector<Float_t>* decayX = nullptr;
+  std::vector<Float_t>* decayY = nullptr;
+  std::vector<Float_t>* decayZ = nullptr;
+  std::vector<Float_t>* decayTime = nullptr;
   tree->SetBranchAddress("Detector_Nhits", &nhits);
   tree->SetBranchAddress("Detector_pdg", hitPdg);
   tree->SetBranchAddress("Detector_Ed", hitEdep);
+  tree->SetBranchAddress("Decay_N", &decayCount);
+  tree->SetBranchAddress("Decay_pdg", &decayPdg);
+  tree->SetBranchAddress("Decay_E", &decayEnergy);
+  tree->SetBranchAddress("Decay_px", &decayPx);
+  tree->SetBranchAddress("Decay_py", &decayPy);
+  tree->SetBranchAddress("Decay_pz", &decayPz);
+  tree->SetBranchAddress("Decay_x", &decayX);
+  tree->SetBranchAddress("Decay_y", &decayY);
+  tree->SetBranchAddress("Decay_z", &decayZ);
+  tree->SetBranchAddress("Decay_t", &decayTime);
   bool hasMultipleParticleHits = false;
   bool hasDifferentParticleHits = false;
+  bool hasBetaProduct = false;
   Int_t maxHits = 0;
   for (Long64_t entry = 0; entry < tree->GetEntries(); entry++) {
     tree->GetEntry(entry);
+    if (decayCount <= 0 || !decayPdg || !decayEnergy || !decayPx ||
+        !decayPy || !decayPz || !decayX || !decayY || !decayZ || !decayTime ||
+        decayCount != static_cast<Int_t>(decayPdg->size()) ||
+        decayCount != static_cast<Int_t>(decayEnergy->size()) ||
+        decayCount != static_cast<Int_t>(decayPx->size()) ||
+        decayCount != static_cast<Int_t>(decayPy->size()) ||
+        decayCount != static_cast<Int_t>(decayPz->size()) ||
+        decayCount != static_cast<Int_t>(decayX->size()) ||
+        decayCount != static_cast<Int_t>(decayY->size()) ||
+        decayCount != static_cast<Int_t>(decayZ->size()) ||
+        decayCount != static_cast<Int_t>(decayTime->size()))
+      gSystem->Exit(1);
+    for (Int_t product = 0; product < decayCount; product++) {
+      if ((*decayEnergy)[product] < 0) gSystem->Exit(1);
+      if ((*decayPdg)[product] == EXPECTED_BETA_PDG) hasBetaProduct = true;
+    }
     if (nhits > maxHits) maxHits = nhits;
     Float_t hitTotal = 0;
     for (Int_t hit = 0; hit < nhits; hit++) hitTotal += hitEdep[hit];
@@ -113,10 +157,11 @@ void CheckCounts() {
     if (hitTotal <= 0)
       gSystem->Exit(1);
   }
-  if (!hasMultipleParticleHits || !hasDifferentParticleHits || maxHits > 10)
+  if (!hasMultipleParticleHits || !hasDifferentParticleHits ||
+      !hasBetaProduct || maxHits > 10)
     gSystem->Exit(1);
 }
-""")
+""".replace("EXPECTED_BETA_PDG", str(-11 if source == "Na22" else 11)))
                 result = subprocess.run(
                     ["root", "-l", "-b", "-q", str(check)], cwd=work, text=True,
                     stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=60,
