@@ -34,6 +34,7 @@ protected:
   G4ParticleDefinition*  fPDef; 
   G4double               fTime; 
   G4double               fEdep;
+  G4bool                 fBetaOrigin;
   G4ThreeVector          fMom;   
   G4ThreeVector          fPosPre; 
   G4ThreeVector          fPosPost; 
@@ -53,6 +54,8 @@ public:
   inline G4int                 GetID()      { return fID;  };
   inline G4ParticleDefinition* GetPDef()    { return fPDef; };
   inline G4double              GetTime()    { return fTime; };
+  inline void SetBetaOrigin(G4bool beta) { fBetaOrigin = beta; };
+  inline G4bool IsBetaOrigin() { return fBetaOrigin; };
   inline G4ThreeVector         GetMom()     { return fMom; };
   inline G4ThreeVector         GetPosPre()  { return fPosPre; };
   inline G4ThreeVector         GetPosPost() { return fPosPost; };
@@ -84,8 +87,6 @@ inline void DetectorHit::operator delete(void* aHit)
 #endif
 
 //---------------------------------------------------------------------------
-
-
 
 
 

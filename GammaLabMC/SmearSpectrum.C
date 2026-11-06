@@ -56,10 +56,12 @@ void SmearSpectrum( string finname  = home+"/G4_SOURCE1.root",
   Float_t         Prim_t;
   Int_t           Prim_pdg;
   Int_t           Detector_Nhits;
-  Float_t         Detector_t[1];
-  Int_t           Detector_pdg[1];
-  Float_t         Detector_E[1];
-  Float_t         Detector_Ed[1];
+  Float_t         Detector_t[2];
+  Int_t           Detector_pdg[2];
+  Float_t         Detector_E[2];
+  Float_t         Detector_Ed[2];
+  Float_t         Detector_EdBeta = 0;
+  Float_t         Detector_EdGamma = 0;
 
   // Set branch addresses.
   T->SetBranchAddress("Prim_E",&Prim_E);
@@ -72,6 +74,12 @@ void SmearSpectrum( string finname  = home+"/G4_SOURCE1.root",
   T->SetBranchAddress("Detector_pdg",Detector_pdg);
   T->SetBranchAddress("Detector_E",Detector_E);
   T->SetBranchAddress("Detector_Ed",Detector_Ed);
+  const bool hasOriginEdeps =
+      T->GetBranch("Detector_EdBeta") && T->GetBranch("Detector_EdGamma");
+  if (hasOriginEdeps) {
+    T->SetBranchAddress("Detector_EdBeta", &Detector_EdBeta);
+    T->SetBranchAddress("Detector_EdGamma", &Detector_EdGamma);
+  }
   
   Long64_t nentries = T->GetEntries();
 
@@ -85,9 +93,17 @@ void SmearSpectrum( string finname  = home+"/G4_SOURCE1.root",
   for ( Long64_t i = 0; i < nentries; i++ ) {
 
     T->GetEntry(i);                       // get the ith detector hit
-    if( Detector_Ed[0] == 0 ) continue;   // ignore hits that deposit no energy
-    
-    float gam_energy = Detector_Ed[0] * 1000; //convert to keV
+    Double_t depositedEnergy = 0;
+    if (hasOriginEdeps) {
+      depositedEnergy = Detector_EdBeta + Detector_EdGamma;
+    } else {
+      for (Int_t hit = 0; hit < Detector_Nhits; hit++) {
+        depositedEnergy += Detector_Ed[hit];
+      }
+    }
+    if (depositedEnergy <= 0) continue;
+
+    float gam_energy = depositedEnergy * 1000; //convert to keV
     float resolution = resconst * TMath::Power( gam_energy, respower );
     float fwhm       = resolution * gam_energy;
     float sigma      = fwhm/2.35;

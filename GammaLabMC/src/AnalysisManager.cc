@@ -26,6 +26,8 @@ AnalysisManager::AnalysisManager()
   fOutputType  = TString("detector");
   fGeneratedEventCount = 0;
   fTransportedEventCount = 0;
+  fBetaEdep = 0;
+  fGammaEdep = 0;
   fROOTfile = NULL;
   fROOTtree = NULL;
 
@@ -75,6 +77,8 @@ void AnalysisManager::InitOutput()
   fROOTtree->Branch("Detector_zpost",     fRAW_zpost,      "Detector_zpost[Detector_Nhits]/F"  );
   fROOTtree->Branch("Detector_E",     fRAW_Energy, "Detector_E[Detector_Nhits]/F"   );
   fROOTtree->Branch("Detector_Ed",    fRAW_Edep,   "Detector_Ed[Detector_Nhits]/F"  );
+  fROOTtree->Branch("Detector_EdBeta", &fBetaEdep, "Detector_EdBeta/F");
+  fROOTtree->Branch("Detector_EdGamma", &fGammaEdep, "Detector_EdGamma/F");
   
 }
 
@@ -94,6 +98,8 @@ void AnalysisManager::ZeroArray()
 
   // Raw Hits
   fRAW_Nhits     = 0;
+  fBetaEdep      = 0;
+  fGammaEdep     = 0;
   fFPDpdef   = NULL;
   fFPDp3     = (zero);
   fFPDpospre    = (zero);

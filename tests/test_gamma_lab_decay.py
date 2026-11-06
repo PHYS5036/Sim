@@ -76,14 +76,31 @@ class RadioactiveDecayTests(unittest.TestCase):
 #include "TTree.h"
 #include "TParameter.h"
 #include "TSystem.h"
+#include <cmath>
 void CheckCounts() {
   TFile file("decay.root");
   auto tree = file.Get<TTree>("T");
   auto generated = file.Get<TParameter<Long64_t>>("GeneratedEventCount");
   auto transported = file.Get<TParameter<Long64_t>>("TransportedEventCount");
+  if (!tree || !tree->GetBranch("Detector_EdBeta") ||
+      !tree->GetBranch("Detector_EdGamma"))
+    gSystem->Exit(1);
   if (!tree || !generated || !transported ||
       generated->GetVal() != 20 || transported->GetVal() != 20)
     gSystem->Exit(1);
+  Int_t nhits;
+  Float_t hitEdep[2], betaEdep, gammaEdep;
+  tree->SetBranchAddress("Detector_Nhits", &nhits);
+  tree->SetBranchAddress("Detector_Ed", hitEdep);
+  tree->SetBranchAddress("Detector_EdBeta", &betaEdep);
+  tree->SetBranchAddress("Detector_EdGamma", &gammaEdep);
+  for (Long64_t entry = 0; entry < tree->GetEntries(); entry++) {
+    tree->GetEntry(entry);
+    Float_t hitTotal = 0;
+    for (Int_t hit = 0; hit < nhits; hit++) hitTotal += hitEdep[hit];
+    if (std::abs(hitTotal - betaEdep - gammaEdep) > 1e-5)
+      gSystem->Exit(1);
+  }
 }
 """)
                 result = subprocess.run(

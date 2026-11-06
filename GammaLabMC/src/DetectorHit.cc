@@ -13,6 +13,7 @@ DetectorHit::DetectorHit()
   fPDef = 0;
   fTime = 0;
   fEdep = 0;
+  fBetaOrigin = false;
 }
 
 //---------------------------------------------------------------------------
@@ -28,6 +29,7 @@ DetectorHit::DetectorHit(const DetectorHit& right)
 {
   fID   = right.fID;
   fEdep = right.fEdep;
+  fBetaOrigin = right.fBetaOrigin;
   fPDef = right.fPDef;
   fTime = right.fTime;
   fMom  + right.fMom;
@@ -42,6 +44,7 @@ const DetectorHit& DetectorHit::operator=(const DetectorHit& right)
 
   fID   =right.fID;
   fEdep =right.fEdep;
+  fBetaOrigin =right.fBetaOrigin;
   fPDef =right.fPDef;
   fTime =right.fTime;
   fMom  +right.fMom;
@@ -66,8 +69,6 @@ void DetectorHit::Print()
 {;}
 
 //---------------------------------------------------------------------------
-
-
 
 
 

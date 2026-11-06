@@ -9,6 +9,7 @@
 
 #include "DetectorSD.hh"
 #include "DetectorHit.hh"
+#include "TrackOriginInfo.hh"
 
 //---------------------------------------------------------------------------
 
@@ -19,10 +20,10 @@ DetectorSD::DetectorSD(G4String name, G4int nelem)
   fCollection = NULL;
   fNelements  = nelem;
   fNhits      = 0;
-  fhitID      = new G4int[fNelements];
-  fHits       = new G4int[fNelements];
-  for(G4int i=0; i<fNelements; i++) fhitID[i] = -1;
-  for(G4int i=0; i<fNelements; i++) fHits[i]  = 0;
+  fhitID      = new G4int[2*fNelements];
+  fHits       = new G4int[2*fNelements];
+  for(G4int i=0; i<2*fNelements; i++) fhitID[i] = -1;
+  for(G4int i=0; i<2*fNelements; i++) fHits[i]  = 0;
 }
 
 //---------------------------------------------------------------------------
@@ -53,21 +54,27 @@ G4bool DetectorSD::ProcessHits(G4Step* aStep,G4TouchableHistory*)
   G4int    id     = 0;
   G4Track* aTrack = aStep->GetTrack();
   G4double edep   = aStep->GetTotalEnergyDeposit();
+  const auto* originInfo =
+      dynamic_cast<const TrackOriginInfo*>(aTrack->GetUserInformation());
+  const G4int origin = originInfo &&
+      originInfo->GetOrigin() == TrackOrigin::Beta ? 1 : 0;
+  const G4int hitID = 2*id + origin;
 
-  if (fhitID[id]==-1){
+  if (fhitID[hitID]==-1){
     DetectorHit* Hit = new DetectorHit;
     Hit->AddEnergy(edep);
+    Hit->SetBetaOrigin(origin == 1);
     Hit->SetMomentum(aTrack->GetMomentum());
     Hit->SetPrePosition(aStep->GetPreStepPoint()->GetPosition());
     Hit->SetPostPosition(aStep->GetPostStepPoint()->GetPosition());
     Hit->SetPDef(aTrack->GetDefinition());
     Hit->SetID(id);
     Hit->SetTime(aStep->GetPostStepPoint()->GetGlobalTime());
-    fhitID[id] = fCollection->insert(Hit) -1;
-    fHits[fNhits++]=id;
+    fhitID[hitID] = fCollection->insert(Hit) -1;
+    fHits[fNhits++]=hitID;
   }
   else {
-    (*fCollection)[fhitID[id]]->AddEnergy(edep);
+    (*fCollection)[fhitID[hitID]]->AddEnergy(edep);
   }
   return true;
 }
@@ -92,7 +99,6 @@ void DetectorSD::EndOfEvent(G4HCofThisEvent*)
 }
 
 //---------------------------------------------------------------------------
-
 
 
 
