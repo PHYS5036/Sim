@@ -88,21 +88,33 @@ void CheckCounts() {
       generated->GetVal() != 100 || transported->GetVal() != 100)
     gSystem->Exit(1);
   Int_t nhits;
+  Int_t hitPdg[50000];
   Float_t hitEdep[50000];
   tree->SetBranchAddress("Detector_Nhits", &nhits);
+  tree->SetBranchAddress("Detector_pdg", hitPdg);
   tree->SetBranchAddress("Detector_Ed", hitEdep);
   bool hasMultipleParticleHits = false;
+  bool hasDifferentParticleHits = false;
+  Int_t maxHits = 0;
   for (Long64_t entry = 0; entry < tree->GetEntries(); entry++) {
     tree->GetEntry(entry);
+    if (nhits > maxHits) maxHits = nhits;
     Float_t hitTotal = 0;
     for (Int_t hit = 0; hit < nhits; hit++) hitTotal += hitEdep[hit];
     if (nhits > 1) {
       hasMultipleParticleHits = true;
+      for (Int_t first = 0; first < nhits; first++) {
+        for (Int_t second = first + 1; second < nhits; second++) {
+          if (hitPdg[first] != hitPdg[second])
+            hasDifferentParticleHits = true;
+        }
+      }
     }
     if (hitTotal <= 0)
       gSystem->Exit(1);
   }
-  if (!hasMultipleParticleHits) gSystem->Exit(1);
+  if (!hasMultipleParticleHits || !hasDifferentParticleHits || maxHits > 10)
+    gSystem->Exit(1);
 }
 """)
                 result = subprocess.run(

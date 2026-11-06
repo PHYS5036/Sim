@@ -44,9 +44,11 @@ The existing detector readout sums all deposits within a simulation event;
 this mode therefore includes decay-cascade summing, including delayed daughter
 emissions, without modelling an electronics coincidence window. It is not
 simply an independent beta continuum added to the old photon spectrum.
-The ROOT event tree stores one hit per particle track that deposits energy in
-the detector, including its PDG code and energy deposit. Multiple particles in
-an event therefore appear as separate entries in the hit arrays.
+The ROOT event tree stores one hit per initial decay product that deposits
+energy in the detector, including its PDG code and energy deposit. Deposits from
+secondary tracks descended from that product are accumulated in the same hit;
+distinct decay products in an event appear as separate entries in the hit
+arrays.
 `SmearSpectrum.C` sums all hit deposits in each event before smearing.
 Geant4's radioactive-decay and photon-evaporation datasets must be installed
 (they are included in the CI image).
