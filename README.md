@@ -1,6 +1,23 @@
 # Gamma Labs Simulation Software
 Simulation software and set up for attentuation and absolute determination experiments for the PHYS5036 labs.
 
+## Local environment setup
+
+From the repository root, source `setupLocal.sh` to configure the project paths
+without copying a machine-specific bashrc:
+
+```bash
+source ./setupLocal.sh
+```
+
+By default, the repository is used for `SIM_DIR` and `PROJECT_DIR`; output files
+go to its `outputs` directory, and `config.json` is used as the configuration.
+Set `PROJECT_DIR`, `OUTPUT_DIR` or `CONFIG_PATH` before sourcing the script to
+override those defaults. To load local ROOT and Geant4 installations, set
+`ROOT_SETUP` and `GEANT4_SETUP` to their respective `thisroot.sh` and
+`geant4.sh` scripts before sourcing. If their environments are already loaded,
+these variables are not needed.
+
 ## Including initial beta particles
 
 Set `"includeBetas": true` in the JSON configuration passed to
