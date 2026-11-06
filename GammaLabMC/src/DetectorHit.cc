@@ -74,6 +74,3 @@ void DetectorHit::Print()
 
 
 
-
-
-

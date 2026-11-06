@@ -4,6 +4,7 @@
 #include "G4UIcommand.hh"
 #include "G4UIdirectory.hh"
 #include "G4UIcmdWithAString.hh"
+#include "G4UIcmdWithABool.hh"
 
 //---------------------------------------------------------------------------
 
@@ -18,6 +19,10 @@ PhysicsListMessenger::PhysicsListMessenger( PhysicsList* PhysList )
 
   fEmProcessCmd = new G4UIcmdWithAString("/GammaLabMC/physics/SetEmProcess",this);
   fEmProcessCmd->SetGuidance("Select which EM gamma processes to use: All, Photoelectric, Compton or Pair");
+
+  fRadioactiveDecayCmd = new G4UIcmdWithABool("/GammaLabMC/physics/RadioactiveDecay",this);
+  fRadioactiveDecayCmd->SetGuidance("Enable ion transport and radioactive decay for a GPS ion source.");
+  fRadioactiveDecayCmd->AvailableForStates(G4State_PreInit);
 }
 
 //---------------------------------------------------------------------------
@@ -28,6 +33,7 @@ PhysicsListMessenger::~PhysicsListMessenger()
 
   delete fEmModelCmd;
   delete fEmProcessCmd;
+  delete fRadioactiveDecayCmd;
 }
 
 //---------------------------------------------------------------------------
@@ -38,6 +44,8 @@ void PhysicsListMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     fPhysicsList->SetEmModel( newValue );
   else if (command == fEmProcessCmd )
     fPhysicsList->SetEmProcess( newValue );
+  else if (command == fRadioactiveDecayCmd)
+    fPhysicsList->SetRadioactiveDecay(fRadioactiveDecayCmd->GetNewBoolValue(newValue));
 }
 
 //---------------------------------------------------------------------------

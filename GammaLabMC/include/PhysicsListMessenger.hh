@@ -10,6 +10,7 @@ class PhysicsList;
 class G4UIdirectory;
 class G4UIcommand;
 class G4UIcmdWithAString;
+class G4UIcmdWithABool;
 
 //---------------------------------------------------------------------------
 
@@ -28,9 +29,9 @@ private:
 
   G4UIcmdWithAString*          fEmModelCmd;
   G4UIcmdWithAString*          fEmProcessCmd;
+  G4UIcmdWithABool*            fRadioactiveDecayCmd;
 };
 
 #endif
 
 //---------------------------------------------------------------------------
-

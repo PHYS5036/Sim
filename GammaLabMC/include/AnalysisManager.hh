@@ -10,9 +10,11 @@
 #include "Rtypes.h"
 #include "TVector3.h"
 #include "TString.h"
+#include <vector>
 
 class TTree;
 class TFile;
+class G4Track;
 
 //---------------------------------------------------------------------------
 
@@ -28,6 +30,8 @@ public:
     fGeneratedEventCount = generated;
     fTransportedEventCount = transported;
   }
+  void ClearDecayProducts();
+  void AddDecayProduct(const G4Track* track);
 
   void ZeroArray();
   void FillArray( Int_t );
@@ -60,6 +64,16 @@ private:
   TTree*                fROOTtree;
   G4int                 fGeneratedEventCount;
   G4int                 fTransportedEventCount;
+  Int_t                 fDecay_N;
+  std::vector<Int_t>    fDecay_pdg;
+  std::vector<Float_t>  fDecay_E;
+  std::vector<Float_t>  fDecay_px;
+  std::vector<Float_t>  fDecay_py;
+  std::vector<Float_t>  fDecay_pz;
+  std::vector<Float_t>  fDecay_x;
+  std::vector<Float_t>  fDecay_y;
+  std::vector<Float_t>  fDecay_z;
+  std::vector<Float_t>  fDecay_t;
   
   // Primary
   Float_t               fPEne;

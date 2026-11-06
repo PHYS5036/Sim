@@ -6,6 +6,7 @@
 #include "G4RunManager.hh"
 #include "G4Point3D.hh"
 #include "G4Transform3D.hh"
+#include "G4Track.hh"
 
 #include "TROOT.h"
 #include "TApplication.h"
@@ -65,6 +66,16 @@ void AnalysisManager::InitOutput()
   fROOTtree->Branch("Prim_Ph",     &fPph,    "Prim_Ph/F"     );
   fROOTtree->Branch("Prim_t",      &fPTime,  "Prim_t/F"      );
   fROOTtree->Branch("Prim_pdg",    &fPpdg,   "Prim_pdg/I"    );
+  fROOTtree->Branch("Decay_N",     &fDecay_N, "Decay_N/I");
+  fROOTtree->Branch("Decay_pdg",   &fDecay_pdg);
+  fROOTtree->Branch("Decay_E",     &fDecay_E);
+  fROOTtree->Branch("Decay_px",    &fDecay_px);
+  fROOTtree->Branch("Decay_py",    &fDecay_py);
+  fROOTtree->Branch("Decay_pz",    &fDecay_pz);
+  fROOTtree->Branch("Decay_x",     &fDecay_x);
+  fROOTtree->Branch("Decay_y",     &fDecay_y);
+  fROOTtree->Branch("Decay_z",     &fDecay_z);
+  fROOTtree->Branch("Decay_t",     &fDecay_t);
   
   // Set Raw FPD Scintillator Hit Branches
   fROOTtree->Branch("Detector_Nhits", &fRAW_Nhits, "Detector_Nhits/I");  
@@ -76,6 +87,40 @@ void AnalysisManager::InitOutput()
   fROOTtree->Branch("Detector_E",     fRAW_Energy, "Detector_E[Detector_Nhits]/F"   );
   fROOTtree->Branch("Detector_Ed",    fRAW_Edep,   "Detector_Ed[Detector_Nhits]/F"  );
   
+}
+
+//---------------------------------------------------------------------------
+
+void AnalysisManager::ClearDecayProducts()
+{
+  fDecay_N = 0;
+  fDecay_pdg.clear();
+  fDecay_E.clear();
+  fDecay_px.clear();
+  fDecay_py.clear();
+  fDecay_pz.clear();
+  fDecay_x.clear();
+  fDecay_y.clear();
+  fDecay_z.clear();
+  fDecay_t.clear();
+}
+
+void AnalysisManager::AddDecayProduct(const G4Track* track)
+{
+  const auto* definition = track->GetDefinition();
+  const auto& momentum = track->GetMomentum();
+  const auto& position = track->GetPosition();
+
+  fDecay_pdg.push_back(definition->GetPDGEncoding());
+  fDecay_E.push_back(static_cast<Float_t>(track->GetKineticEnergy()));
+  fDecay_px.push_back(static_cast<Float_t>(momentum.x()));
+  fDecay_py.push_back(static_cast<Float_t>(momentum.y()));
+  fDecay_pz.push_back(static_cast<Float_t>(momentum.z()));
+  fDecay_x.push_back(static_cast<Float_t>(position.x()));
+  fDecay_y.push_back(static_cast<Float_t>(position.y()));
+  fDecay_z.push_back(static_cast<Float_t>(position.z()));
+  fDecay_t.push_back(static_cast<Float_t>(track->GetGlobalTime()));
+  fDecay_N = static_cast<Int_t>(fDecay_pdg.size());
 }
 
 //---------------------------------------------------------------------------

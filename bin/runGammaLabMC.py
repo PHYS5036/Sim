@@ -11,6 +11,7 @@ macroName = "runmacro.mac"
 allowedSourceTypes = ["Cs137", "Na22", "Co57", "Co60", "Am241"]
 allowedDetectorTypes = ["0", "1"] # 0 for GAGG, 1 for NaI
 allowedSourceHolderTypes = ["0", "1"] # 0 for 3D printed, 1 for Lead with hole
+betaSources = {"Cs137": (55, 137), "Na22": (11, 22), "Co60": (27, 60)}
 
 # Determine config file path
 simdir = os.environ.get('SIM_DIR')
@@ -65,6 +66,7 @@ except json.JSONDecodeError:
     sys.exit(1)
 
 sourceName = config.get("sourceName", "Cs137")
+includeBetas = config.get("includeBetas", False)
 nEvents = config.get("nEvents", "250000")
 absorberOn = config.get("absorberOn", "0")
 absorberMat = config.get("absorberMat", "G4_AIR")
@@ -80,6 +82,7 @@ detectorTypeName = 'SodiumIodide' if detectorType == '1' else 'GAGG'
 print("\n ----- Settings from config file -----")
 print(f" sourceName: {sourceName}")
 print(f" nEvents: {nEvents}")
+print(f" includeBetas: {includeBetas}")
 print(f" absorberOn: {'Yes' if absorberOn == '1' else 'No'}")
 print(f" absorberMaterial: {absorberMat}")
 print(f" absorberThickness: {absorberThickness} mm")
@@ -92,6 +95,22 @@ print(f" --------------------------------------\n")
 if sourceName not in allowedSourceTypes:
     print(f"Error: Invalid sourceName '{sourceName}'. Allowed values are {allowedSourceTypes}.")
     sys.exit(1)
+if not isinstance(includeBetas, bool):
+    if isinstance(includeBetas, str) and includeBetas in ("0", "1"):
+        includeBetas = includeBetas == "1"
+    else:
+        print("Error: includeBetas must be a JSON boolean or the string '0' or '1'.")
+        sys.exit(1)
+try:
+    nEvents = int(str(nEvents))
+    if not 0 < nEvents <= 2147483647:
+        raise ValueError
+except ValueError:
+    print("Error: nEvents must be a positive integer no greater than 2147483647.")
+    sys.exit(1)
+decaySource = betaSources.get(sourceName) if includeBetas else None
+if includeBetas and decaySource is None:
+    print(f"{sourceName} has no initial beta branch; retaining the gamma-only simulation.")
 if detectorType not in allowedDetectorTypes:
     print(f"Error: Invalid detectorType '{detectorType}'. Allowed values are {allowedDetectorTypes}.")
     sys.exit(1)
@@ -109,6 +128,9 @@ except ValueError:
 # ---------------------
 sourcePropName = f"/GammaLabMC/macros/{sourceName}.txt"
 
+if decaySource is not None:
+    sourceName = f"{sourceName}_withBetas"
+
 if absorberOn == "1":
     sourceName = f"{sourceName}_{absorberMat}_{absorberThickness}"
 
@@ -125,11 +147,14 @@ print("simdir:", simdir)
 print("sourcePropName:", sourcePropName)
 print("genName:", genName)
 print("nEvents:", nEvents)
-subprocess.run([
-    "root", "-b", "-q",
-    f'{simdir}/GammaLabMC/GenerateSpectrum.C+("{simdir}{sourcePropName}","{genName}",{nEvents},0,{detectorType},{sourceHolderType},{detectorHolderDistance})'
-], check=True)
-print("Generated spectrum!")
+if decaySource is None:
+    subprocess.run([
+        "root", "-b", "-q",
+        f'{simdir}/GammaLabMC/GenerateSpectrum.C+("{simdir}{sourcePropName}","{genName}",{nEvents},0,{detectorType},{sourceHolderType},{detectorHolderDistance})'
+    ], check=True)
+    print("Generated spectrum!")
+else:
+    print("Using full radioactive decays, including initial betas; no geometric pre-transport cut.")
 
 # ---------------------
 # Write Macro file
@@ -143,10 +168,24 @@ with open(macroName, "w") as f:
     f.write(f"/GammaLabMC/detector/AbsorberThickness {absorberThickness} \n")
     f.write("/GammaLabMC/physics/SetEmModel Standard \n")
     f.write("/GammaLabMC/physics/SetEmProcess All \n")
+    if decaySource is not None:
+        f.write("/GammaLabMC/physics/RadioactiveDecay true \n")
     f.write("/run/initialize \n")
-    f.write("/GammaLabMC/generator/Mode 1 \n")
-    f.write(f"/GammaLabMC/generator/InputFile {genName} \n")
     f.write(f"/GammaLabMC/analysis/setOutputFile {simName} \n")
+    if decaySource is None:
+        f.write("/GammaLabMC/generator/Mode 1 \n")
+        f.write(f"/GammaLabMC/generator/InputFile {genName} \n")
+    else:
+        atomicNumber, massNumber = decaySource
+        # Geant4 11.2 otherwise suppresses decays with lifetimes above one year.
+        f.write("/process/had/rdm/thresholdForVeryLongDecayTime 1e60 year \n")
+        f.write("/GammaLabMC/generator/Mode 0 \n")
+        f.write("/gps/particle ion \n")
+        f.write(f"/gps/ion {atomicNumber} {massNumber} 0 0 \n")
+        f.write("/gps/ene/mono 0 keV \n")
+        f.write("/gps/pos/type Point \n")
+        f.write("/gps/pos/centre 0 0 0 mm \n")
+        f.write(f"/run/beamOn {nEvents} \n")
 print("Macro file written.")
 
 # ---------------------
@@ -166,5 +205,6 @@ print(f"Smearing spectrum with resconst={resconst}, respower={respower}")
 subprocess.run(["root", "-b", "-q", f'{simdir}/GammaLabMC/SmearSpectrum.C+("{simName}",{resconst},{respower})'], check=True)
 print("Smeared spectrum!")
 
-os.remove(genName)
+if decaySource is None:
+    os.remove(genName)
 os.remove(simName)

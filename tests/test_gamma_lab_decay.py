@@ -1,0 +1,232 @@
+"""Integration checks: set GAMMALABMC_EXECUTABLE and source the Geant4/ROOT environment."""
+
+import json
+import os
+from pathlib import Path
+import re
+import shutil
+import subprocess
+import sys
+import tempfile
+import unittest
+
+
+EXECUTABLE = os.environ.get("GAMMALABMC_EXECUTABLE")
+REPOSITORY = Path(__file__).resolve().parents[1]
+
+
+@unittest.skipUnless(EXECUTABLE and shutil.which("root"), "requires GammaLabMC and ROOT")
+class RadioactiveDecayTests(unittest.TestCase):
+    def test_beta_particles_and_decay_counts(self):
+        for source, z, a, beta, endpoint, final_ion in (
+            ("Cs137", 55, 137, "e-", 1.176, 1000561370),
+            ("Co60", 27, 60, "e-", 1.492, 1000280600),
+            ("Na22", 11, 22, "e+", 0.546, 1000100220),
+        ):
+            with self.subTest(source=source), tempfile.TemporaryDirectory() as directory:
+                work = Path(directory)
+                macro = work / "decay.mac"
+                macro.write_text(f"""
+/GammaLabMC/detector/DetectorType 1
+/GammaLabMC/detector/SourceHolderType 0
+/GammaLabMC/detector/DetectorDistance 50
+/GammaLabMC/physics/SetEmModel Standard
+/GammaLabMC/physics/SetEmProcess All
+/GammaLabMC/physics/RadioactiveDecay true
+/run/initialize
+/process/had/rdm/thresholdForVeryLongDecayTime 1e60 year
+/GammaLabMC/analysis/setOutputFile {work / "decay.root"}
+/GammaLabMC/generator/Mode 0
+/GammaLabMC/generator/Seed 12345
+/gps/particle ion
+/gps/ion {z} {a} 0 0
+/gps/ene/mono 0 keV
+/gps/pos/type Point
+/gps/pos/centre 0 0 0 mm
+/tracking/verbose 1
+/run/beamOn 100
+""")
+                result = subprocess.run(
+                    [EXECUTABLE, str(macro)], cwd=work, text=True,
+                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=120,
+                )
+                self.assertEqual(result.returncode, 0, result.stdout[-8000:])
+                self.assertFalse("COMMAND NOT FOUND" in result.stdout, result.stdout[-8000:])
+                self.assertFalse("G4Exception" in result.stdout, result.stdout[-8000:])
+                beta_energies = []
+                for track in re.split(r"\* G4Track Information:", result.stdout)[1:]:
+                    if re.match(
+                        rf"\s+Particle = {re.escape(beta)},\s+Track ID = \d+,\s+Parent ID = 1\n",
+                        track,
+                    ):
+                        energy = re.search(
+                            r"^\s*0\s+\S+\s+\S+\s+\S+\s+([0-9.e+-]+)", track, re.MULTILINE,
+                        )
+                        self.assertIsNotNone(energy)
+                        beta_energies.append(float(energy[1]))
+                self.assertGreater(len(beta_energies), 5, result.stdout[-8000:])
+                self.assertGreater(len(set(beta_energies)), 3)
+                self.assertTrue(all(0 < energy < endpoint for energy in beta_energies))
+                self.assertTrue("Particle = gamma," in result.stdout, result.stdout[-8000:])
+                if source == "Na22":
+                    self.assertTrue("annihil" in result.stdout, result.stdout[-8000:])
+                check = work / "CheckCounts.C"
+                check.write_text("""
+#include "TFile.h"
+#include "TTree.h"
+#include "TParameter.h"
+#include "TSystem.h"
+#include <vector>
+void CheckCounts() {
+  TFile file("decay.root");
+  auto tree = file.Get<TTree>("T");
+  auto generated = file.Get<TParameter<Long64_t>>("GeneratedEventCount");
+  auto transported = file.Get<TParameter<Long64_t>>("TransportedEventCount");
+  if (!tree || tree->GetBranch("Detector_EdBeta") ||
+      tree->GetBranch("Detector_EdGamma"))
+    gSystem->Exit(1);
+  if (!tree || !generated || !transported ||
+      generated->GetVal() != 100 || transported->GetVal() != 100)
+    gSystem->Exit(1);
+  if (!tree->GetBranch("Decay_N") || !tree->GetBranch("Decay_E") ||
+      !tree->GetBranch("Decay_pdg") || !tree->GetBranch("Decay_px") ||
+      !tree->GetBranch("Decay_py") || !tree->GetBranch("Decay_pz") ||
+      !tree->GetBranch("Decay_x") || !tree->GetBranch("Decay_y") ||
+      !tree->GetBranch("Decay_z") || !tree->GetBranch("Decay_t"))
+    gSystem->Exit(1);
+  Int_t nhits;
+  Int_t hitPdg[50000];
+  Float_t hitEdep[50000];
+  Int_t decayCount;
+  std::vector<Int_t>* decayPdg = nullptr;
+  std::vector<Float_t>* decayEnergy = nullptr;
+  std::vector<Float_t>* decayPx = nullptr;
+  std::vector<Float_t>* decayPy = nullptr;
+  std::vector<Float_t>* decayPz = nullptr;
+  std::vector<Float_t>* decayX = nullptr;
+  std::vector<Float_t>* decayY = nullptr;
+  std::vector<Float_t>* decayZ = nullptr;
+  std::vector<Float_t>* decayTime = nullptr;
+  tree->SetBranchAddress("Detector_Nhits", &nhits);
+  tree->SetBranchAddress("Detector_pdg", hitPdg);
+  tree->SetBranchAddress("Detector_Ed", hitEdep);
+  tree->SetBranchAddress("Decay_N", &decayCount);
+  tree->SetBranchAddress("Decay_pdg", &decayPdg);
+  tree->SetBranchAddress("Decay_E", &decayEnergy);
+  tree->SetBranchAddress("Decay_px", &decayPx);
+  tree->SetBranchAddress("Decay_py", &decayPy);
+  tree->SetBranchAddress("Decay_pz", &decayPz);
+  tree->SetBranchAddress("Decay_x", &decayX);
+  tree->SetBranchAddress("Decay_y", &decayY);
+  tree->SetBranchAddress("Decay_z", &decayZ);
+  tree->SetBranchAddress("Decay_t", &decayTime);
+  bool hasMultipleParticleHits = false;
+  bool hasDifferentParticleHits = false;
+  bool hasBetaProduct = false;
+  bool hasFinalNucleus = false;
+  bool hasDecayGamma = false;
+  Int_t maxHits = 0;
+  for (Long64_t entry = 0; entry < tree->GetEntries(); entry++) {
+    tree->GetEntry(entry);
+    if (decayCount <= 0 || !decayPdg || !decayEnergy || !decayPx ||
+        !decayPy || !decayPz || !decayX || !decayY || !decayZ || !decayTime ||
+        decayCount != static_cast<Int_t>(decayPdg->size()) ||
+        decayCount != static_cast<Int_t>(decayEnergy->size()) ||
+        decayCount != static_cast<Int_t>(decayPx->size()) ||
+        decayCount != static_cast<Int_t>(decayPy->size()) ||
+        decayCount != static_cast<Int_t>(decayPz->size()) ||
+        decayCount != static_cast<Int_t>(decayX->size()) ||
+        decayCount != static_cast<Int_t>(decayY->size()) ||
+        decayCount != static_cast<Int_t>(decayZ->size()) ||
+        decayCount != static_cast<Int_t>(decayTime->size()))
+      gSystem->Exit(1);
+    for (Int_t product = 0; product < decayCount; product++) {
+      if ((*decayEnergy)[product] < 0) gSystem->Exit(1);
+      if ((*decayPdg)[product] == EXPECTED_BETA_PDG) hasBetaProduct = true;
+      if ((*decayPdg)[product] == EXPECTED_FINAL_ION) hasFinalNucleus = true;
+      if ((*decayPdg)[product] == 22) hasDecayGamma = true;
+      if ((*decayPdg)[product] > 1000000000 &&
+          (*decayPdg)[product] != EXPECTED_FINAL_ION)
+        gSystem->Exit(1);
+    }
+    if (nhits > maxHits) maxHits = nhits;
+    Float_t hitTotal = 0;
+    for (Int_t hit = 0; hit < nhits; hit++) {
+      hitTotal += hitEdep[hit];
+      bool isFinalProduct = false;
+      for (Int_t product = 0; product < decayCount; product++) {
+        if (hitPdg[hit] == (*decayPdg)[product]) isFinalProduct = true;
+      }
+      if (!isFinalProduct) gSystem->Exit(1);
+    }
+    if (nhits > 1) {
+      hasMultipleParticleHits = true;
+      for (Int_t first = 0; first < nhits; first++) {
+        for (Int_t second = first + 1; second < nhits; second++) {
+          if (hitPdg[first] != hitPdg[second])
+            hasDifferentParticleHits = true;
+        }
+      }
+    }
+    if (hitTotal <= 0)
+      gSystem->Exit(1);
+  }
+  if (!hasMultipleParticleHits || !hasDifferentParticleHits ||
+      !hasBetaProduct || !hasFinalNucleus || !hasDecayGamma || maxHits > 10)
+    gSystem->Exit(1);
+}
+""".replace("EXPECTED_BETA_PDG", str(-11 if source == "Na22" else 11))
+   .replace("EXPECTED_FINAL_ION", str(final_ion)))
+                result = subprocess.run(
+                    ["root", "-l", "-b", "-q", str(check)], cwd=work, text=True,
+                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=60,
+                )
+                self.assertEqual(result.returncode, 0, result.stdout)
+
+    def test_runner_produces_spectra(self):
+        with tempfile.TemporaryDirectory() as directory:
+            work = Path(directory)
+            # ACLiC needs a writable copy of the ROOT macros.
+            simulation = work / "GammaLabMC"
+            simulation.mkdir()
+            for name in ("GenerateSpectrum.C", "SmearSpectrum.C"):
+                shutil.copy2(REPOSITORY / "GammaLabMC" / name, simulation / name)
+            shutil.copytree(REPOSITORY / "GammaLabMC" / "macros", simulation / "macros")
+            environment = dict(
+                os.environ, SIM_DIR=str(work), PROJECT_DIR=str(work), OUTPUT_DIR=str(work),
+                PATH=str(Path(EXECUTABLE).parent) + os.pathsep + os.environ["PATH"],
+            )
+            for source, enabled in (("Cs137", False), ("Cs137", True),
+                                    ("Co60", True), ("Na22", True)):
+                with self.subTest(source=source, includeBetas=enabled):
+                    config = work / "config.json"
+                    config.write_text(json.dumps({
+                        "sourceName": source, "includeBetas": enabled,
+                        "nEvents": 2000, "detectorType": "1",
+                    }))
+                    result = subprocess.run(
+                        [sys.executable, str(REPOSITORY / "bin" / "runGammaLabMC.py"),
+                         str(config)],
+                        cwd=work, env=environment, text=True,
+                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=120,
+                    )
+                    self.assertEqual(result.returncode, 0, result.stdout[-8000:])
+                    self.assertFalse("G4Exception" in result.stdout, result.stdout[-8000:])
+                    suffix = "_withBetas" if enabled else ""
+                    stem = f"G4_SodiumIodide_{source}{suffix}"
+                    spectrum = (work / f"{stem}.Spe").read_text().splitlines()
+                    self.assertEqual(spectrum[9:11], ["$DATA:", "0 511"])
+                    channels = [float(value) for value in spectrum[11:523]]
+                    self.assertEqual(len(channels), 512)
+                    self.assertGreater(sum(channels), 0)
+                    self.assertGreater((work / f"{stem}.pdf").stat().st_size, 0)
+                    counts = (work / f"{stem}_event_counts.txt").read_text()
+                    if enabled:
+                        self.assertEqual(
+                            counts, "GeneratedEventCount 2000\nTransportedEventCount 2000\n",
+                        )
+                    self.assertFalse((work / f"{stem}.root").exists())
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -9,6 +9,11 @@
 #include "G4eIonisation.hh"
 #include "G4eBremsstrahlung.hh"
 #include "G4eplusAnnihilation.hh"
+#include "G4hMultipleScattering.hh"
+#include "G4ionIonisation.hh"
+#include "G4RadioactiveDecayPhysics.hh"
+#include "G4IonConstructor.hh"
+#include "G4LeptonConstructor.hh"
 
 // Extra EM Processes
 #include "G4RayleighScattering.hh" 
@@ -56,6 +61,8 @@ PhysicsList::PhysicsList():  G4VUserPhysicsList()
 
 PhysicsList::~PhysicsList()
 {
+  delete fDecayPhysics;
+  delete fPmessenger;
 }
 
 //---------------------------------------------------------------------------
@@ -68,6 +75,10 @@ void PhysicsList::ConstructParticle()
 
   G4Electron::ElectronDefinition();
   G4Positron::PositronDefinition();
+
+  // Geant4 constructs particles before reading the macro's physics switches.
+  G4IonConstructor::ConstructParticle();
+  G4LeptonConstructor::ConstructParticle();
 }
 
 //---------------------------------------------------------------------------
@@ -77,6 +88,10 @@ void PhysicsList::ConstructProcess()
   AddTransportation();
   ConstructEM();
   ConstructGeneral();
+  if (fRadioactiveDecay) {
+    fDecayPhysics = new G4RadioactiveDecayPhysics();
+    fDecayPhysics->ConstructProcess();
+  }
   AddStepMax();
 }
 
@@ -93,6 +108,12 @@ void PhysicsList::ConstructEM()
     G4ParticleDefinition* particle = theParticleIterator->value();
     G4ProcessManager* pmanager = particle->GetProcessManager();
     G4String particleName = particle->GetParticleName();
+
+    if (particle->GetParticleType() == "nucleus") {
+      ph->RegisterProcess(new G4hMultipleScattering(), particle);
+      ph->RegisterProcess(new G4ionIonisation(), particle);
+      continue;
+    }
 
     //-------------------------------------------------------------------------------------
      

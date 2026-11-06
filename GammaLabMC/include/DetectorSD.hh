@@ -6,6 +6,7 @@
 #include "G4Step.hh"
 #include "globals.hh"
 #include "G4VHitsCollection.hh"
+#include <unordered_map>
 
 #include "DetectorHit.hh"
 
@@ -26,18 +27,12 @@ public:
 private:
   
   DetectorHitsCollection*  fCollection;  
-  G4int                    fDetID;
-  G4int                    fNelements;
-  G4int                    fNhits;
-  G4int*                   fhitID;
-  G4int*                   fHits;
+  std::unordered_map<G4int, DetectorHit*> fTrackHits;
 
 };
 #endif
 
 //---------------------------------------------------------------------------
-
-
 
 
 
