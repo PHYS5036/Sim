@@ -56,12 +56,10 @@ void SmearSpectrum( string finname  = home+"/G4_SOURCE1.root",
   Float_t         Prim_t;
   Int_t           Prim_pdg;
   Int_t           Detector_Nhits;
-  Float_t         Detector_t[2];
-  Int_t           Detector_pdg[2];
-  Float_t         Detector_E[2];
-  Float_t         Detector_Ed[2];
-  Float_t         Detector_EdBeta = 0;
-  Float_t         Detector_EdGamma = 0;
+  Float_t         Detector_t[50000];
+  Int_t           Detector_pdg[50000];
+  Float_t         Detector_E[50000];
+  Float_t         Detector_Ed[50000];
 
   // Set branch addresses.
   T->SetBranchAddress("Prim_E",&Prim_E);
@@ -74,12 +72,6 @@ void SmearSpectrum( string finname  = home+"/G4_SOURCE1.root",
   T->SetBranchAddress("Detector_pdg",Detector_pdg);
   T->SetBranchAddress("Detector_E",Detector_E);
   T->SetBranchAddress("Detector_Ed",Detector_Ed);
-  const bool hasOriginEdeps =
-      T->GetBranch("Detector_EdBeta") && T->GetBranch("Detector_EdGamma");
-  if (hasOriginEdeps) {
-    T->SetBranchAddress("Detector_EdBeta", &Detector_EdBeta);
-    T->SetBranchAddress("Detector_EdGamma", &Detector_EdGamma);
-  }
   
   Long64_t nentries = T->GetEntries();
 
@@ -94,12 +86,8 @@ void SmearSpectrum( string finname  = home+"/G4_SOURCE1.root",
 
     T->GetEntry(i);                       // get the ith detector hit
     Double_t depositedEnergy = 0;
-    if (hasOriginEdeps) {
-      depositedEnergy = Detector_EdBeta + Detector_EdGamma;
-    } else {
-      for (Int_t hit = 0; hit < Detector_Nhits; hit++) {
-        depositedEnergy += Detector_Ed[hit];
-      }
+    for (Int_t hit = 0; hit < Detector_Nhits; hit++) {
+      depositedEnergy += Detector_Ed[hit];
     }
     if (depositedEnergy <= 0) continue;
 

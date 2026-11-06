@@ -18,7 +18,6 @@
 #include "PrimaryGeneratorAction.hh"
 #include "EventAction.hh"
 #include "AnalysisManager.hh"
-#include "RadiationOriginTrackingAction.hh"
 
 #include "G4VisExecutive.hh"
 
@@ -37,7 +36,6 @@ int main(int argc, char** argv) {
   runManager->SetUserInitialization(detCon);
   runManager->SetUserAction(pga);
   runManager->SetUserAction(event);
-  runManager->SetUserAction(new RadiationOriginTrackingAction());
 
   G4UImanager * UI         = G4UImanager::GetUIpointer();
   G4VisManager* visManager = 0;

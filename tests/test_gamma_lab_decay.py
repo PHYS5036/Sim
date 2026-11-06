@@ -44,7 +44,7 @@ class RadioactiveDecayTests(unittest.TestCase):
 /gps/pos/type Point
 /gps/pos/centre 0 0 0 mm
 /tracking/verbose 1
-/run/beamOn 20
+/run/beamOn 100
 """)
                 result = subprocess.run(
                     [EXECUTABLE, str(macro)], cwd=work, text=True,
@@ -76,31 +76,33 @@ class RadioactiveDecayTests(unittest.TestCase):
 #include "TTree.h"
 #include "TParameter.h"
 #include "TSystem.h"
-#include <cmath>
 void CheckCounts() {
   TFile file("decay.root");
   auto tree = file.Get<TTree>("T");
   auto generated = file.Get<TParameter<Long64_t>>("GeneratedEventCount");
   auto transported = file.Get<TParameter<Long64_t>>("TransportedEventCount");
-  if (!tree || !tree->GetBranch("Detector_EdBeta") ||
-      !tree->GetBranch("Detector_EdGamma"))
+  if (!tree || tree->GetBranch("Detector_EdBeta") ||
+      tree->GetBranch("Detector_EdGamma"))
     gSystem->Exit(1);
   if (!tree || !generated || !transported ||
-      generated->GetVal() != 20 || transported->GetVal() != 20)
+      generated->GetVal() != 100 || transported->GetVal() != 100)
     gSystem->Exit(1);
   Int_t nhits;
-  Float_t hitEdep[2], betaEdep, gammaEdep;
+  Float_t hitEdep[50000];
   tree->SetBranchAddress("Detector_Nhits", &nhits);
   tree->SetBranchAddress("Detector_Ed", hitEdep);
-  tree->SetBranchAddress("Detector_EdBeta", &betaEdep);
-  tree->SetBranchAddress("Detector_EdGamma", &gammaEdep);
+  bool hasMultipleParticleHits = false;
   for (Long64_t entry = 0; entry < tree->GetEntries(); entry++) {
     tree->GetEntry(entry);
     Float_t hitTotal = 0;
     for (Int_t hit = 0; hit < nhits; hit++) hitTotal += hitEdep[hit];
-    if (std::abs(hitTotal - betaEdep - gammaEdep) > 1e-5)
+    if (nhits > 1) {
+      hasMultipleParticleHits = true;
+    }
+    if (hitTotal <= 0)
       gSystem->Exit(1);
   }
+  if (!hasMultipleParticleHits) gSystem->Exit(1);
 }
 """)
                 result = subprocess.run(

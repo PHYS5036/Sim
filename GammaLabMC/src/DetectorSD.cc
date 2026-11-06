@@ -1,29 +1,20 @@
-#include "G4RunManager.hh"
-#include "G4VPhysicalVolume.hh"
 #include "G4Step.hh"
-#include "G4VTouchable.hh"
-#include "G4TouchableHistory.hh"
+#include "G4Track.hh"
 #include "G4SDManager.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4THitsCollection.hh"
+#include <unordered_map>
 
 #include "DetectorSD.hh"
 #include "DetectorHit.hh"
-#include "TrackOriginInfo.hh"
 
 //---------------------------------------------------------------------------
 
-DetectorSD::DetectorSD(G4String name, G4int nelem)
+DetectorSD::DetectorSD(G4String name, G4int)
   :G4VSensitiveDetector(name)
 {
   collectionName.insert(G4String("SDHits")+name);
   fCollection = NULL;
-  fNelements  = nelem;
-  fNhits      = 0;
-  fhitID      = new G4int[2*fNelements];
-  fHits       = new G4int[2*fNelements];
-  for(G4int i=0; i<2*fNelements; i++) fhitID[i] = -1;
-  for(G4int i=0; i<2*fNelements; i++) fHits[i]  = 0;
 }
 
 //---------------------------------------------------------------------------
@@ -37,6 +28,7 @@ void DetectorSD::Initialize(G4HCofThisEvent* HCE)
 {
 
   fCollection = new DetectorHitsCollection(SensitiveDetectorName,collectionName[0]);
+  fTrackHits.clear();
   static G4int HCID = -1;
 
   if( HCID < 0 )  {
@@ -51,30 +43,24 @@ void DetectorSD::Initialize(G4HCofThisEvent* HCE)
 G4bool DetectorSD::ProcessHits(G4Step* aStep,G4TouchableHistory*)
 { 
  
-  G4int    id     = 0;
   G4Track* aTrack = aStep->GetTrack();
   G4double edep   = aStep->GetTotalEnergyDeposit();
-  const auto* originInfo =
-      dynamic_cast<const TrackOriginInfo*>(aTrack->GetUserInformation());
-  const G4int origin = originInfo &&
-      originInfo->GetOrigin() == TrackOrigin::Beta ? 1 : 0;
-  const G4int hitID = 2*id + origin;
-
-  if (fhitID[hitID]==-1){
+  if (edep <= 0) return false;
+  auto found = fTrackHits.find(aTrack->GetTrackID());
+  if (found == fTrackHits.end()) {
     DetectorHit* Hit = new DetectorHit;
     Hit->AddEnergy(edep);
-    Hit->SetBetaOrigin(origin == 1);
     Hit->SetMomentum(aTrack->GetMomentum());
     Hit->SetPrePosition(aStep->GetPreStepPoint()->GetPosition());
     Hit->SetPostPosition(aStep->GetPostStepPoint()->GetPosition());
     Hit->SetPDef(aTrack->GetDefinition());
-    Hit->SetID(id);
+    Hit->SetID(aTrack->GetTrackID());
     Hit->SetTime(aStep->GetPostStepPoint()->GetGlobalTime());
-    fhitID[hitID] = fCollection->insert(Hit) -1;
-    fHits[fNhits++]=hitID;
+    fTrackHits.emplace(aTrack->GetTrackID(), Hit);
+    fCollection->insert(Hit);
   }
   else {
-    (*fCollection)[fhitID[hitID]]->AddEnergy(edep);
+    found->second->AddEnergy(edep);
   }
   return true;
 }
@@ -90,19 +76,10 @@ G4bool DetectorSD::ProcessHits_constStep(const G4Step*, G4TouchableHistory*)
 
 void DetectorSD::EndOfEvent(G4HCofThisEvent*)
 {
-  
-  for (G4int i=0;i<fNhits;i++) {
-    fhitID[fHits[i]] = -1;
-    fHits[i]         = 0;
-  }
-  fNhits = 0;
+  fTrackHits.clear();
 }
 
 //---------------------------------------------------------------------------
-
-
-
-
 
 
 

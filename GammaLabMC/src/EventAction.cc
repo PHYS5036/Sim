@@ -53,8 +53,6 @@ void EventAction::EndOfEventAction(const G4Event* evt)
   G4HCofThisEvent* HCE = evt->GetHCofThisEvent();
   DetectorHit* hit;
   G4int nfpd_phys = 0;
-  G4double betaEdep = 0;
-  G4double gammaEdep = 0;
 
   if(HCE) {
     G4int CollSize = HCE->GetNumberOfCollections();
@@ -80,15 +78,12 @@ void EventAction::EndOfEventAction(const G4Event* evt)
 	    fAnaManager->SetFPDTime( (G4double) hit->GetTime() );
 	    fAnaManager->SetFPDEdep( (G4double) hit->GetEdep() );
 	    fAnaManager->FillArray( nfpd_phys ); 
-	    if (hit->IsBetaOrigin()) betaEdep += hit->GetEdep();
-	    else gammaEdep += hit->GetEdep();
 	    nfpd_phys++;
 	  }
 	}
     }
     
     if( nfpd_phys != 0 ) {
-      fAnaManager->SetOriginEdeps(betaEdep, gammaEdep);
       fAnaManager->SetPrimaryDirection ( (G4ThreeVector)fPGA->GetDirection() );
       fAnaManager->SetPrimaryEnergy    ( (G4double)fPGA->GetEnergy() );
       fAnaManager->SetPrimaryTime      ( (G4double)fPGA->GetTime() );

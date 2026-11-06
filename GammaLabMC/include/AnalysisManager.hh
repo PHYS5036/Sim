@@ -28,10 +28,6 @@ public:
     fGeneratedEventCount = generated;
     fTransportedEventCount = transported;
   }
-  void SetOriginEdeps(G4double beta, G4double gamma) {
-    fBetaEdep = static_cast<Float_t>(beta);
-    fGammaEdep = static_cast<Float_t>(gamma);
-  }
 
   void ZeroArray();
   void FillArray( Int_t );
@@ -64,8 +60,6 @@ private:
   TTree*                fROOTtree;
   G4int                 fGeneratedEventCount;
   G4int                 fTransportedEventCount;
-  Float_t               fBetaEdep;
-  Float_t               fGammaEdep;
   
   // Primary
   Float_t               fPEne;
