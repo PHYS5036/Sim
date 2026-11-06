@@ -49,6 +49,7 @@ G4bool DetectorSD::ProcessHits(G4Step* aStep,G4TouchableHistory*)
   if (edep <= 0) return false;
   const auto* groupInfo =
       dynamic_cast<const TrackGroupInfo*>(aTrack->GetUserInformation());
+  if (groupInfo && !groupInfo->IsFinalProduct()) return false;
   const G4int groupID = groupInfo
       ? groupInfo->GetGroupID() : aTrack->GetTrackID();
   auto found = fTrackHits.find(groupID);
@@ -86,7 +87,6 @@ void DetectorSD::EndOfEvent(G4HCofThisEvent*)
 }
 
 //---------------------------------------------------------------------------
-
 
 
 

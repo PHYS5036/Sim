@@ -44,11 +44,11 @@ The existing detector readout sums all deposits within a simulation event;
 this mode therefore includes decay-cascade summing, including delayed daughter
 emissions, without modelling an electronics coincidence window. It is not
 simply an independent beta continuum added to the old photon spectrum.
-The ROOT event tree stores one hit per initial decay product that deposits
-energy in the detector, including its PDG code and energy deposit. Deposits from
+The ROOT event tree stores one hit per final decay product that deposits energy
+in the detector, including its PDG code and energy deposit. Deposits from
 secondary tracks descended from that product are accumulated in the same hit;
-distinct decay products in an event appear as separate entries in the hit
-arrays.
+excited or unstable nuclear intermediates are not recorded as hit groups.
+Distinct final products in an event appear as separate entries in the hit arrays.
 The `Decay_*` branches record the state of final decay products after nuclear
 de-excitation: emitted non-nuclear particles and stable nuclei, excluding
 excited or unstable intermediate nuclei. They include PDG code, kinetic energy,

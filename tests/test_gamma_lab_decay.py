@@ -151,7 +151,14 @@ void CheckCounts() {
     }
     if (nhits > maxHits) maxHits = nhits;
     Float_t hitTotal = 0;
-    for (Int_t hit = 0; hit < nhits; hit++) hitTotal += hitEdep[hit];
+    for (Int_t hit = 0; hit < nhits; hit++) {
+      hitTotal += hitEdep[hit];
+      bool isFinalProduct = false;
+      for (Int_t product = 0; product < decayCount; product++) {
+        if (hitPdg[hit] == (*decayPdg)[product]) isFinalProduct = true;
+      }
+      if (!isFinalProduct) gSystem->Exit(1);
+    }
     if (nhits > 1) {
       hasMultipleParticleHits = true;
       for (Int_t first = 0; first < nhits; first++) {

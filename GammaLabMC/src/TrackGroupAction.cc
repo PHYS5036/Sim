@@ -10,8 +10,12 @@
 void TrackGroupAction::PreUserTrackingAction(const G4Track* track)
 {
   if (!track->GetUserInformation()) {
+    const G4bool intermediateIon =
+        track->GetParentID() == 0 &&
+        track->GetDefinition()->GetParticleType() == "nucleus";
     fpTrackingManager->SetUserTrackInformation(
-        new TrackGroupInfo(track->GetTrackID(), track->GetDefinition()));
+        new TrackGroupInfo(track->GetTrackID(), track->GetDefinition(),
+                           !intermediateIon));
   }
 }
 
@@ -24,8 +28,6 @@ void TrackGroupAction::PostUserTrackingAction(const G4Track* track)
       dynamic_cast<const TrackGroupInfo*>(track->GetUserInformation());
   const G4bool nuclearDecay =
       track->GetDefinition()->GetParticleType() == "nucleus";
-  const G4bool primaryIon =
-      track->GetParentID() == 0 && nuclearDecay;
 
   for (auto* secondary : *secondaries) {
     if (secondary->GetUserInformation()) continue;
@@ -34,21 +36,24 @@ void TrackGroupAction::PostUserTrackingAction(const G4Track* track)
         (creator->GetProcessName().contains("RadioactiveDecay") ||
          creator->GetProcessName() == "PhotonEvaporation");
     if (nuclearDecay && decayProduct) {
-      const auto* definition = secondary->GetDefinition();
+      auto* definition = secondary->GetDefinition();
       const G4bool stableNucleus =
           definition->GetParticleType() == "nucleus" &&
           definition->GetPDGStable();
-      if (definition->GetParticleType() != "nucleus" || stableNucleus) {
+      const G4bool finalProduct =
+          definition->GetParticleType() != "nucleus" || stableNucleus;
+      if (finalProduct) {
         fAnalysisManager->AddDecayProduct(secondary);
       }
+      secondary->SetUserInformation(new TrackGroupInfo(
+          secondary->GetTrackID(), definition, finalProduct));
+    } else if (parentInfo) {
+      secondary->SetUserInformation(new TrackGroupInfo(
+          parentInfo->GetGroupID(), parentInfo->GetParticle(),
+          parentInfo->IsFinalProduct()));
+    } else {
+      secondary->SetUserInformation(new TrackGroupInfo(
+          track->GetTrackID(), track->GetDefinition()));
     }
-
-    const G4int groupID = primaryIon
-        ? secondary->GetTrackID()
-        : (parentInfo ? parentInfo->GetGroupID() : track->GetTrackID());
-    auto* particle = primaryIon
-        ? secondary->GetDefinition()
-        : (parentInfo ? parentInfo->GetParticle() : track->GetDefinition());
-    secondary->SetUserInformation(new TrackGroupInfo(groupID, particle));
   }
 }
