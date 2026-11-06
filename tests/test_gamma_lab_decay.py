@@ -18,10 +18,10 @@ REPOSITORY = Path(__file__).resolve().parents[1]
 @unittest.skipUnless(EXECUTABLE and shutil.which("root"), "requires GammaLabMC and ROOT")
 class RadioactiveDecayTests(unittest.TestCase):
     def test_beta_particles_and_decay_counts(self):
-        for source, z, a, beta, endpoint in (
-            ("Cs137", 55, 137, "e-", 1.176),
-            ("Co60", 27, 60, "e-", 1.492),
-            ("Na22", 11, 22, "e+", 0.546),
+        for source, z, a, beta, endpoint, final_ion in (
+            ("Cs137", 55, 137, "e-", 1.176, 1000561370),
+            ("Co60", 27, 60, "e-", 1.492, 1000280600),
+            ("Na22", 11, 22, "e+", 0.546, 1000100220),
         ):
             with self.subTest(source=source), tempfile.TemporaryDirectory() as directory:
                 work = Path(directory)
@@ -123,6 +123,8 @@ void CheckCounts() {
   bool hasMultipleParticleHits = false;
   bool hasDifferentParticleHits = false;
   bool hasBetaProduct = false;
+  bool hasFinalNucleus = false;
+  bool hasDecayGamma = false;
   Int_t maxHits = 0;
   for (Long64_t entry = 0; entry < tree->GetEntries(); entry++) {
     tree->GetEntry(entry);
@@ -141,6 +143,11 @@ void CheckCounts() {
     for (Int_t product = 0; product < decayCount; product++) {
       if ((*decayEnergy)[product] < 0) gSystem->Exit(1);
       if ((*decayPdg)[product] == EXPECTED_BETA_PDG) hasBetaProduct = true;
+      if ((*decayPdg)[product] == EXPECTED_FINAL_ION) hasFinalNucleus = true;
+      if ((*decayPdg)[product] == 22) hasDecayGamma = true;
+      if ((*decayPdg)[product] > 1000000000 &&
+          (*decayPdg)[product] != EXPECTED_FINAL_ION)
+        gSystem->Exit(1);
     }
     if (nhits > maxHits) maxHits = nhits;
     Float_t hitTotal = 0;
@@ -158,10 +165,11 @@ void CheckCounts() {
       gSystem->Exit(1);
   }
   if (!hasMultipleParticleHits || !hasDifferentParticleHits ||
-      !hasBetaProduct || maxHits > 10)
+      !hasBetaProduct || !hasFinalNucleus || !hasDecayGamma || maxHits > 10)
     gSystem->Exit(1);
 }
-""".replace("EXPECTED_BETA_PDG", str(-11 if source == "Na22" else 11)))
+""".replace("EXPECTED_BETA_PDG", str(-11 if source == "Na22" else 11))
+   .replace("EXPECTED_FINAL_ION", str(final_ion)))
                 result = subprocess.run(
                     ["root", "-l", "-b", "-q", str(check)], cwd=work, text=True,
                     stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=60,
